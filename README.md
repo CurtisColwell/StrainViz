@@ -14,10 +14,23 @@ After downloading this repository, no installation is necessary.
 
 ## Instructions
 
-1. Optimize the geometry using gaussian.
-2. Take the output file and create an .xyz from the output 
-file by copy and pasting the final atom positions.
-3. Open in Avogadro and delete atoms to create dummy force 
-calculation input files.
-4. Do the force calculation.
-5. Use the scripts.
+1. Model the strained compound in Avogadro and create a Gaussian 
+input file, example.inp, to optimize the geometry.
+2. Use Gaussian to calculate the optimized geometry as an output 
+file, example.out.
+3. Save the cartesian coordinates as an XYZ file, example.xyz, by
+opening the output file with a text editor and copying the coordinates.
+4. Create dummy input files that have the strain released by opening 
+the file in Avogadro, deleting apropriate atoms and creating Gaussian 
+input files of these strained released geometries.
+5. Use Gaussian to calculate the force on all atoms by using the 
+keyword Force Geom=ModRedundant in place of Opt.
+6. Use the geometry file, example.xyz, and the dummy output file to
+create a representation of the strain using the Python scripts 
+contained in the Jupyter notebook.
+7. This script will create three .tcl files.
+8. Open VMD and open the "Tk Console" found under "Extensions".
+9. Run the command:
+```
+source example.tcl
+```
