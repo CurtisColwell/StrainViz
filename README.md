@@ -18,8 +18,9 @@ After downloading this repository, no installation is necessary.
 input file, example.inp, to optimize the geometry.
 2. Use Gaussian to calculate the optimized geometry as an output 
 file, example.out.
-3. Save the cartesian coordinates as an XYZ file, example.xyz, by
-opening the output file with a text editor and copying the coordinates.
+3. Save the cartesian coordinates as an XYZ file, example.xyz, in the 
+/geometry/ directory by opening the output file with a text editor and 
+copying the coordinates.
 4. Create dummy input files that have the strain released by opening 
 the file in Avogadro, deleting apropriate atoms and creating Gaussian 
 input files of these strained released geometries.
