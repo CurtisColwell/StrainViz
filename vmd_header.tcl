@@ -1,6 +1,3 @@
-# Load a molecule
-mol new geom.xyz
-
 # Change bond radii and various resolution parameters
 mol representation cpk 0.8 0.0 30 5
 mol representation bonds 0.2 30
