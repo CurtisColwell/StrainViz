@@ -28,7 +28,7 @@ input files of these strained released geometries.
 keyword Force Geom=ModRedundant in place of Opt.
 6. Use the geometry file, example.xyz, and the dummy output file to
 create a representation of the strain using the Python scripts 
-contained in the Jupyter notebook.
+contained in the Jupyter notebook.This will take take the useful information from the .out file and return an .xyz file.
 7. This script will create three .tcl files.
 8. Open VMD and open the "Tk Console" found under "Extensions".
 9. Run the command:
