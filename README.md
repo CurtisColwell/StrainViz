@@ -20,7 +20,7 @@ input file, example.inp, to optimize the geometry.
 file, example.out.
 3. Save the cartesian coordinates as an XYZ file, example.xyz, in the 
 /geometry/ directory by opening the output file with a text editor and 
-copying the coordinates.
+copying the coordinates. This will take take the useful information from the .out file and return an .xyz file.
 4. Create dummy input files that have the strain released by opening 
 the file in Avogadro, deleting apropriate atoms and creating Gaussian 
 input files of these strained released geometries.
@@ -28,7 +28,7 @@ input files of these strained released geometries.
 keyword Force Geom=ModRedundant in place of Opt.
 6. Use the geometry file, example.xyz, and the dummy output file to
 create a representation of the strain using the Python scripts 
-contained in the Jupyter notebook.This will take take the useful information from the .out file and return an .xyz file.
+contained in the Jupyter notebook.
 7. This script will create three .tcl files.
 8. Open VMD and open the "Tk Console" found under "Extensions".
 9. Run the command:
