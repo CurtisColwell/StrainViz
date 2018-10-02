@@ -1,8 +1,9 @@
+import os
 """ Maps the force values from the output file onto the geom.xyz file.
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
-	atoms, bond_forces, angle_forces, dihedral_forces = force_parse(force_output)
+	atoms, bond_forces, angle_forces, dihedral_forces = force_parse("dummies/" + force_output)
 	
 	#Open geom.xym and create list of aom number, type, and coordinates
 	output_file = open(geometry,'r')
@@ -31,9 +32,9 @@ def map_forces(geometry, force_output):
 	angle_forces_vmd = vmd_norm(mapped_angle_forces)
 	dihedral_forces_vmd = vmd_norm(mapped_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script.tcl", bond_forces_vmd)
-	vmd_writer("vmd_angle_script.tcl", angle_forces_vmd)
-	vmd_writer("vmd_dihedral_script.tcl", dihedral_forces_vmd)
+	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry)
+	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry)
+	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry)
 
 """ Use the format var_a, var_b, var_c = force_parse("outputfile.out") when 
 calling this function. Returns lists of bond, angle, and dihedral forces.
@@ -157,8 +158,9 @@ def vmd_norm(force_values):
 and the bonds they belong to")
 Writes the script that you can then run in the VMD Tk Console using "source script.tcl"
 """
-def vmd_writer(script_name, bond_colors):
-	script = open(script_name, "w")
+def vmd_writer(script_name, bond_colors, geometry_filename):
+	script = open('output/' + script_name, "w")
+	script.write("# Load a molecule\r mol new %s\r\r" % (geometry_filename))
 	with open("vmd_header.tcl") as script_header:
 		for line in script_header:
 			script.write(line)
