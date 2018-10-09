@@ -25,13 +25,15 @@ copying the coordinates.
 the file in Avogadro, deleting apropriate atoms and creating Gaussian 
 input files of these strained released geometries.
 5. Use Gaussian to calculate the force on all atoms by using the 
-keyword Force Geom=ModRedundant in place of Opt.
-6. Use the geometry file, example.xyz, and the dummy output file to
+keyword "Force Geom=ModRedundant" in place of "Opt".
+6. Use the geometry file, example.xyz, and the dummy output files to
 create a representation of the strain using the Python scripts 
 contained in the Jupyter notebook.
-7. This script will create three .tcl files.
+7. This script will create a list of .tcl scripts. Three for each
+dummy file and three total force scripts for the bond, angle and 
+dihedral strain.
 8. Open VMD and open the "Tk Console" found under "Extensions".
-9. Run the command:
+9. Navigate to the project folder and run the command:
 ```
-source example.tcl
+source output/example.tcl
 ```
