@@ -1,11 +1,12 @@
 import os
+import copy
 """ Maps the force values from the output file onto the geom.xyz file.
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
 	atoms, bond_forces, angle_forces, dihedral_forces = force_parse("dummies/" + force_output)
 	
-	#Open geom.xym and create list of aom number, type, and coordinates
+	#Open geom.xym and create list of atom number, type, and coordinates
 	output_file = open(geometry,'r')
 	output_text = output_file.read()
 	output_lines = output_text.splitlines()
@@ -19,22 +20,59 @@ def map_forces(geometry, force_output):
 	#Create a key to correlate dummy atoms to base geometry atoms
 	#First number is dummy atom, second number is base geometry atom
 	key = []
+	extra_atoms = []
 	for line1 in atom_list:
 		for line2 in atoms:
-			if line1[1] == line2[1] and line1[2] == line2[2] and line1[3] == line2[3]:
-				key.append([line2[0],line1[0]])
+			if line1[1:] == line2[1:]:
+				key.append([line2[0], line1[0]])
 				
-	mapped_bond_forces = translate_forces(bond_forces, key, atom_list)
-	mapped_angle_forces = translate_forces(angle_forces, key, atom_list)
-	mapped_dihedral_forces = translate_forces(dihedral_forces, key, atom_list)
+	#Find atoms in dummy, but not in base geometry
+	extra_atoms = []
+	for line in atoms:
+		if line[0] not in [x[0] for x in key]:
+			extra_atoms.append(line[0])
+	
+	#Find atoms attached to those extra atoms
+	peripheral_atoms = []
+	for line in bond_forces:
+		for atom in extra_atoms:
+			if str(atom) == line[1][0]:
+				peripheral_atoms.append(int(line[1][1]))
+			elif str(atom) == line[1][1] and int(line[1][0]) not in peripheral_atoms:
+				peripheral_atoms.append(int(line[1][0]))
+		
+	#Trim off the atoms at the ends of the dummy
+	trimmed_key = []
+	for line in key:
+		if line[0] not in peripheral_atoms:
+			trimmed_key.append(line)
+				
+	mapped_bond_forces = translate_forces(bond_forces, trimmed_key)
+	mapped_angle_forces = translate_forces(angle_forces, trimmed_key)
+	mapped_dihedral_forces = translate_forces(dihedral_forces, trimmed_key)
+	
+	copy_bond_forces = copy.deepcopy(mapped_bond_forces)
+	
+	#Makes a list of bonds
+	bonds = []
+	for line in mapped_bond_forces:
+		bonds.append(line[1])
+	
+	compressed_angle_forces = compress_forces(bonds, mapped_angle_forces)
+	compressed_dihedral_forces = compress_forces(bonds, mapped_dihedral_forces)
+	
+	copy_angle_forces = copy.deepcopy(compressed_angle_forces)
+	copy_dihedral_forces = copy.deepcopy(compressed_dihedral_forces)
 	
 	bond_forces_vmd = vmd_norm(mapped_bond_forces)
-	angle_forces_vmd = vmd_norm(mapped_angle_forces)
-	dihedral_forces_vmd = vmd_norm(mapped_dihedral_forces)
+	angle_forces_vmd = vmd_norm(compressed_angle_forces)
+	dihedral_forces_vmd = vmd_norm(compressed_dihedral_forces)
 	
 	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry)
 	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry)
 	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry)
+
+	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
 """ Use the format var_a, var_b, var_c = force_parse("outputfile.out") when 
 calling this function. Returns lists of bond, angle, and dihedral forces.
@@ -115,7 +153,7 @@ def force_parse(file):
 
 """ Takes the forces and translates the atom numbers to correspond to the base geometry.
 """
-def translate_forces(forces, key, atom_list):
+def translate_forces(forces, key):
 	forces_raw = []
 	for x, a in enumerate(forces):
 		forces_raw.append([a[0], []])
@@ -123,11 +161,12 @@ def translate_forces(forces, key, atom_list):
 			for b in key:
 				if int(c) == b[0]:
 					forces_raw[x][1].append(b[1])
+
 	new_forces = []
 	for line in forces_raw:
 		if len(line[1]) == len(forces[0][1]):
 			new_forces.append(line)
-			
+
 	return new_forces;
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
@@ -171,7 +210,7 @@ def vmd_writer(script_name, bond_colors, geometry_filename):
 		script.write("mol modcolor %s top {colorid %s}\r" % (index+1,line[0]))
 		script.write("mol modselect %s top {index %s %s}\r\r" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
 
-""" Use the formate compressed_forces = compress_forces(bond list, angle or dihedral 
+""" Use the format compressed_forces = compress_forces(bond list, angle or dihedral 
 force list)
 Because multiple bonds take part in a single angle or dihedral strain, this sums
 the force contribution for each bond.
@@ -181,7 +220,7 @@ def compress_forces(bonds, forces):
 	for bond in bonds:
 		for force in forces:
 			if bond[0] in force[1] and bond[1] in force[1]:
-				force_list.append([force[0], [bond[0],bond[1]]])
+				force_list.append([abs(force[0]), [bond[0],bond[1]]])
 	forces_compressed = []
 	for bond in bonds:
 		forces_compressed.append([0, bond])
@@ -190,3 +229,32 @@ def compress_forces(bonds, forces):
 			if bond[1] == x[1]:
 				bond[0] += x[0]
 	return forces_compressed;
+
+""" This function combines all the dummies into a single picture. Forces is a list with 
+the format forces[0] = [force, [c1, c2]]"""
+def combine_dummies(forces, geometry, force_type):
+	#Make a bond list
+	bond_list = []
+	for line in forces:
+		if line[1] in bond_list:
+			continue
+		else:
+			bond_list.append(line[1])
+	
+	#Now make the new force list
+	new_forces = []
+	for line in bond_list:
+		new_forces.append([0, line])
+	
+	#Average the forces for each bond
+	for bond in new_forces:
+		x = 0
+		for line in forces:
+			if bond[1] == line[1]:
+				bond[0] += line[0]
+				x += 1
+		bond[0] /= x
+	
+	#Write the forces to a .tcl script
+	new_forces_vmd = vmd_norm(new_forces)
+	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry)
