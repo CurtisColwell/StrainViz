@@ -52,12 +52,21 @@ def map_forces(geometry, force_output):
 	mapped_dihedral_forces = translate_forces(dihedral_forces, trimmed_key)
 	
 	copy_bond_forces = copy.deepcopy(mapped_bond_forces)
-	copy_angle_forces = copy.deepcopy(mapped_angle_forces)
-	copy_dihedral_forces = copy.deepcopy(mapped_dihedral_forces)
+	
+	#Makes a list of bonds
+	bonds = []
+	for line in mapped_bond_forces:
+		bonds.append(line[1])
+	
+	compressed_angle_forces = compress_forces(bonds, mapped_angle_forces)
+	compressed_dihedral_forces = compress_forces(bonds, mapped_dihedral_forces)
+	
+	copy_angle_forces = copy.deepcopy(compressed_angle_forces)
+	copy_dihedral_forces = copy.deepcopy(compressed_dihedral_forces)
 	
 	bond_forces_vmd = vmd_norm(mapped_bond_forces)
-	angle_forces_vmd = vmd_norm(mapped_angle_forces)
-	dihedral_forces_vmd = vmd_norm(mapped_dihedral_forces)
+	angle_forces_vmd = vmd_norm(compressed_angle_forces)
+	dihedral_forces_vmd = vmd_norm(compressed_dihedral_forces)
 	
 	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry)
 	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry)
@@ -201,7 +210,7 @@ def vmd_writer(script_name, bond_colors, geometry_filename):
 		script.write("mol modcolor %s top {colorid %s}\r" % (index+1,line[0]))
 		script.write("mol modselect %s top {index %s %s}\r\r" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
 
-""" Use the formate compressed_forces = compress_forces(bond list, angle or dihedral 
+""" Use the format compressed_forces = compress_forces(bond list, angle or dihedral 
 force list)
 Because multiple bonds take part in a single angle or dihedral strain, this sums
 the force contribution for each bond.
@@ -211,7 +220,7 @@ def compress_forces(bonds, forces):
 	for bond in bonds:
 		for force in forces:
 			if bond[0] in force[1] and bond[1] in force[1]:
-				force_list.append([force[0], [bond[0],bond[1]]])
+				force_list.append([abs(force[0]), [bond[0],bond[1]]])
 	forces_compressed = []
 	for bond in bonds:
 		forces_compressed.append([0, bond])
@@ -220,3 +229,32 @@ def compress_forces(bonds, forces):
 			if bond[1] == x[1]:
 				bond[0] += x[0]
 	return forces_compressed;
+
+""" This function combines all the dummies into a single picture. Forces is a list with 
+the format forces[0] = [force, [c1, c2]]"""
+def combine_dummies(forces, geometry, force_type):
+	#Make a bond list
+	bond_list = []
+	for line in forces:
+		if line[1] in bond_list:
+			continue
+		else:
+			bond_list.append(line[1])
+	
+	#Now make the new force list
+	new_forces = []
+	for line in bond_list:
+		new_forces.append([0, line])
+	
+	#Average the forces for each bond
+	for bond in new_forces:
+		x = 0
+		for line in forces:
+			if bond[1] == line[1]:
+				bond[0] += line[0]
+				x += 1
+		bond[0] /= x
+	
+	#Write the forces to a .tcl script
+	new_forces_vmd = vmd_norm(new_forces)
+	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry)
