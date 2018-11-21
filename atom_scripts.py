@@ -51,8 +51,9 @@ def atom_force_parse(geometry, file):
 and end point", "name of geometry.xyz")
 Writes the script that you can then run in the VMD Tk Console using "source script.tcl"
 """
-def vmd_vector_writer(script_name, vector_colors, geometry_filename):
+def vmd_vector_writer(script_name, vector_colors, geometry_filename, min, max):
 	script = open('output/' + script_name, "w")
+	script.write("# Minimum: %s\r# Maximum: %s\r\r" % (min,max))
 	script.write("# Load a molecule\rmol new %s\r\r" % (geometry_filename))
 	with open("vmd_vector_header.tcl") as script_header:
 		for line in script_header:
@@ -89,7 +90,9 @@ def normalize(arrows):
 		line[2][1] = line[1][1] + (line[2][1]/10)
 		line[2][2] = line[1][2] + (line[2][2]/10)
 		
-	return norm_arrows;
+	norm_max += norm_min
+		
+	return norm_arrows, norm_min, norm_max;
 	
 def map_atom_forces(geometry_filename, dummy_filename):
 	atom_forces, key, connectivity_data = atom_force_parse(geometry_filename, dummy_filename)
@@ -126,8 +129,31 @@ def map_atom_forces(geometry_filename, dummy_filename):
 		arrows[index].append(trimmed_atom_forces[index][2])
 		arrows[index].append(trimmed_atom_forces[index][1])
 	
-	norm_arrows = normalize(arrows)
+	norm_arrows, arrow_min, arrow_max = normalize(arrows)
 	
-	vmd_vector_writer("test.tcl", norm_arrows, geometry_filename)
+	vmd_vector_writer("vmd_static_force_arrows_"+dummy_filename+".tcl", norm_arrows, geometry_filename, arrow_min, arrow_max)
 	
 	return copy_atom_forces;
+	
+def combine_dummy_arrows(geometry, full_atom_forces):
+	atom_coords = load_geometry(geometry)
+	
+	combined_atom_forces = []
+	for a in atom_coords:
+		force = [0,0,0]
+		for b in full_atom_forces:
+			if a[2] == b[2][0] and a[3] == b[2][1] and a[4] == b[2][2]:
+				force[0] += b[2][0]
+				force[1] += b[2][1]
+				force[2] += b[2][2]
+		combined_atom_forces.append([force, a[2:]])
+	
+	arrows = []
+	for index, line in enumerate(combined_atom_forces):
+		arrows.append([((combined_atom_forces[index][0][0]**2)+(combined_atom_forces[index][0][1])**2+(combined_atom_forces[index][0][2])**2)])
+		arrows[index].append(combined_atom_forces[index][1])
+		arrows[index].append(combined_atom_forces[index][0])
+		
+	norm_arrows, total_min, total_max = normalize(arrows)
+	
+	vmd_vector_writer("vmd_static_force_arrows.tcl", norm_arrows, geometry, total_min, total_max)

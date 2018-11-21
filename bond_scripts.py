@@ -33,13 +33,13 @@ def map_forces(geometry, force_output):
 	copy_angle_forces = copy.deepcopy(compressed_angle_forces)
 	copy_dihedral_forces = copy.deepcopy(compressed_dihedral_forces)
 	
-	bond_forces_vmd = vmd_norm(mapped_bond_forces)
-	angle_forces_vmd = vmd_norm(compressed_angle_forces)
-	dihedral_forces_vmd = vmd_norm(compressed_dihedral_forces)
+	bond_forces_vmd, bond_min, bond_max = vmd_norm(mapped_bond_forces)
+	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
+	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry)
-	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry)
-	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry)
+	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max)
+	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max)
+	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max)
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
@@ -132,15 +132,18 @@ def vmd_norm(force_values):
 	norm_force_values = force_values
 	for i in range(len(norm_force_values)):
 		norm_force_values[i][0] = norm_values[i]
+	
+	norm_max += norm_min
 		
-	return norm_force_values;
+	return norm_force_values, norm_min, norm_max;
 
 """ Use the format vmd_writer("name of output.tcl", "list of normalized forces 
 and the bonds they belong to", "name of geometry.xyz")
 Writes the script that you can then run in the VMD Tk Console using "source script.tcl"
 """
-def vmd_writer(script_name, bond_colors, geometry_filename):
+def vmd_writer(script_name, bond_colors, geometry_filename, min, max):
 	script = open('output/' + script_name, "w")
+	script.write("# Minimum value: %s\r# Maximum value: %s\r\r" % (min, max))
 	script.write("# Load a molecule\rmol new %s\r\r" % (geometry_filename))
 	with open("vmd_bond_header.tcl") as script_header:
 		for line in script_header:
@@ -198,5 +201,5 @@ def combine_dummies(forces, geometry, force_type):
 		bond[0] /= x
 	
 	#Write the forces to a .tcl script
-	new_forces_vmd = vmd_norm(new_forces)
-	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry)
+	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
+	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max)
