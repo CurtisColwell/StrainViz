@@ -5,6 +5,7 @@
 This is a tool to analyze the strain of inherently strained molecules. 
 [Gaussian](http://gaussian.com/glossary/g09/) is used to calculate the 
 optimized geometry and strain of the molecule. 
+
 [VMD](https://www.ks.uiuc.edu/Research/vmd/) is used to visualize the 
 strain. All the scripts used to do this are written in Python. 
 
@@ -15,25 +16,30 @@ After downloading this repository, no installation is necessary.
 ## Instructions
 
 1. Model the strained compound in Avogadro and create a Gaussian 
-input file, example.inp, to optimize the geometry.
-2. Use Gaussian to calculate the optimized geometry as an output 
-file, example.out.
-3. Save the cartesian coordinates as an XYZ file, example.xyz, in the 
-/geometry/ directory by opening the output file with a text editor and 
-copying the coordinates. This will take take the useful information from the .out file and return an .xyz file.
-4. Create dummy input files that have the strain released by opening 
-the file in Avogadro, deleting apropriate atoms and creating Gaussian 
-input files of these strained released geometries.
-5. Use Gaussian to calculate the force on all atoms by using the 
-keyword "Force Geom=ModRedundant" in place of "Opt".
-6. Use the geometry file, example.xyz, and the dummy output files to
-create a representation of the strain using the Python scripts 
-contained in the Jupyter notebook.
-7. This script will create a list of .tcl scripts. Three for each
-dummy file and three total force scripts for the bond, angle and 
-dihedral strain.
-8. Open VMD and open the "Tk Console" found under "Extensions".
-9. Navigate to the project folder and run the command:
+input file to optimize the geometry.
+
+2. Use Gaussian to create an optimized geometry output file.
+
+3. Open the output file in avogadro and save as an .xyz file in the 
+geometry/ directory.
+
+4. Create dummy files by symmetrically deleting portions of the molecule 
+that will allow the molecule to release its strain and saving them as .xyz 
+files in the dummies/ directory.
+
+5. Run the dummy_input.py script to create input files that will optimize 
+the proton added to the dummy molecules using Gaussian.
+
+6. Once the proton has been optimized, use Gaussian to calculate molecular 
+forces using the keyword "Force Geom=ModRedundant".
+
+7. Run the StrainViz.py script to create four .tcl files for the bond, angle 
+and dihedral strain and force on all atoms for each dummy file and four files 
+that combine all the dummies into a total representation.
+
+8. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
+project folder, and run the command:
 ```
 source output/example.tcl
 ```
+to visualize the strain.
