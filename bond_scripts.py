@@ -7,14 +7,12 @@ def map_forces(geometry, force_output):
 	#Parse file for values
 	atoms, bond_forces, angle_forces, dihedral_forces = force_parse("dummies/" + force_output)
 	
-	#Open geom.xyz and create list of atom number, type, and coordinates
-	atom_list = load_geometry(geometry)
-	
 	bond_atoms = []
 	for line in bond_forces:
 		bond_atoms.append(bond_forces[1])
 	
-	key = create_key(atom_list, atoms, bond_atoms)
+	#Use the base geometry and unoptimized dummy geometry to create a key
+	key = create_key(load_geometry(geometry), load_geometry("dummies/" + os.path.splitext(force_output)[0] + ".xyz"), bond_atoms)
 				
 	mapped_bond_forces = translate_forces(bond_forces, key)
 	mapped_angle_forces = translate_forces(angle_forces, key)
@@ -171,17 +169,17 @@ Writes the script that you can then run in the VMD Tk Console using "source scri
 """
 def vmd_writer(script_name, bond_colors, geometry_filename, min, max, header):
 	script = open('output/' + script_name, "w")
-	script.write("# Minimum value: %s\r# Maximum value: %s\r\r" % (min, max))
-	script.write("# Load a molecule\rmol new %s\r\r" % (geometry_filename))
+	script.write("# Minimum value: %s\n# Maximum value: %s\n\n" % (min, max))
+	script.write("# Load a molecule\nmol new %s\n\n" % (geometry_filename))
 	with open(header) as script_header:
 		for line in script_header:
 			script.write(line)
-	script.write("\r")
+	script.write("\n")
 	for index, line in enumerate(bond_colors):
-		script.write("mol addrep top\r")
-		script.write("mol modstyle %s top bonds\r" % (index+1))
-		script.write("mol modcolor %s top {colorid %s}\r" % (index+1,line[0]))
-		script.write("mol modselect %s top {index %s %s}\r\r" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
+		script.write("mol addrep top\n")
+		script.write("mol modstyle %s top bonds\n" % (index+1))
+		script.write("mol modcolor %s top {colorid %s}\n" % (index+1,line[0]))
+		script.write("mol modselect %s top {index %s %s}\n\n" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
 
 """ Use the format compressed_forces = compress_forces(bond list, angle or dihedral 
 force list)

@@ -1,4 +1,5 @@
 from scripts import get_atom_coords, get_connectivity_data, load_geometry, create_key
+import os
 import copy
 """ Use the format var_a, var_b = force_parse("outputfile.out") when 
 calling this function. Returns a list of [atom#, [forcexyz], [coordxyz]] and a key 
@@ -11,7 +12,7 @@ def atom_force_parse(geometry, file):
 	output_lines = output_text.splitlines()
 	
 	#Get atom coordinates
-	atom_coords = get_atom_coords(output_lines)
+	atom_coords = load_geometry("dummies/" + os.path.splitext(file)[0] + ".xyz")
 		
 	#Get atom forces
 	read_line = False
@@ -156,4 +157,4 @@ def combine_dummy_arrows(geometry, full_atom_forces):
 		
 	norm_arrows, total_min, total_max = normalize(arrows)
 	
-	vmd_vector_writer("vmd_static_force_arrows.tcl", norm_arrows, geometry, total_min, total_max)
+	vmd_vector_writer("vmd_static_force_arrows_total.tcl", norm_arrows, geometry, total_min, total_max)
