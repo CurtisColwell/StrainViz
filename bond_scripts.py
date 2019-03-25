@@ -35,9 +35,9 @@ def map_forces(geometry, force_output):
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "vmd_bond_header.tcl")
-	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "vmd_angle_and_dihedral_header.tcl")
-	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("headers/vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "vmd_bond_header.tcl")
+	vmd_writer("headers/vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("headers/vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "vmd_angle_and_dihedral_header.tcl")
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
