@@ -230,6 +230,6 @@ def combine_dummies(forces, geometry, force_type):
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	if force_type == "bond":
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "vmd_bond_header.tcl")
+		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_bond_header.tcl")
 	else:
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "vmd_angle_and_dihedral_header.tcl")
+		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_angle_and_dihedral_header.tcl")
