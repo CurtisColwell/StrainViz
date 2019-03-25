@@ -87,9 +87,9 @@ def normalize(arrows):
 		norm_arrows[i][0] = norm_values[i]
 	
 	for line in norm_arrows:
-		line[2][0] = line[1][0] + (line[2][0]/10)
-		line[2][1] = line[1][1] + (line[2][1]/10)
-		line[2][2] = line[1][2] + (line[2][2]/10)
+		line[2][0] = line[1][0] + (line[2][0])
+		line[2][1] = line[1][1] + (line[2][1])
+		line[2][2] = line[1][2] + (line[2][2])
 		
 	norm_max += norm_min
 		
