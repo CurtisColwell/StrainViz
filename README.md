@@ -27,7 +27,7 @@ geometry/ directory.
 that will allow the molecule to release its strain and saving them as .xyz 
 files in the dummies/ directory.
 
-5. Run the dummy_input.py script to create input files that will optimize 
+5. Run the proton_opt.py script to create input files that will optimize 
 the proton added to the dummy molecules using Gaussian.
 
 6. Once the proton has been optimized, use Gaussian to calculate molecular 

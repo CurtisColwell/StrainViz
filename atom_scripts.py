@@ -56,7 +56,7 @@ def vmd_vector_writer(script_name, vector_colors, geometry_filename, min, max):
 	script = open('output/' + script_name, "w")
 	script.write("# Minimum: %s\r# Maximum: %s\r\r" % (min,max))
 	script.write("# Load a molecule\rmol new %s\r\r" % (geometry_filename))
-	with open("vmd_vector_header.tcl") as script_header:
+	with open("headers/vmd_vector_header.tcl") as script_header:
 		for line in script_header:
 			script.write(line)
 	script.write("\r")
