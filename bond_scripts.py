@@ -164,7 +164,7 @@ def compress_forces(bonds, forces):
 	for bond in bonds:
 		for force in forces:
 			if bond[0] in force[1] and bond[1] in force[1]:
-				force_list.append([force[0], [bond[0],bond[1]]])
+				force_list.append([force[0]/(len(force[1])-1), [bond[0],bond[1]]])
 	forces_compressed = []
 	for bond in bonds:
 		forces_compressed.append([0, bond])
