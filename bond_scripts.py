@@ -31,13 +31,13 @@ def map_forces(geometry, force_output):
 	copy_angle_forces = copy.deepcopy(compressed_angle_forces)
 	copy_dihedral_forces = copy.deepcopy(compressed_dihedral_forces)
 	
-	bond_forces_vmd, bond_min, bond_max = vmd_bond_norm(mapped_bond_forces)
+	bond_forces_vmd, bond_min, bond_max = vmd_norm(mapped_bond_forces)
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_bond_header.tcl")
-	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_angle_and_dihedral_header.tcl")
-	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_header.tcl")
+	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_header.tcl")
+	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_header.tcl")
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
@@ -65,7 +65,7 @@ def force_parse(file):
 		if read_line == True:
 			force_data.append(line.split())
 	for line in force_data:
-		force_list.append([float(line[2])])
+		force_list.append([float(line[2])*float(line[5])])
 		
 	#Add connectivity data
 	connectivity_data = get_connectivity_data(output_lines)
@@ -108,33 +108,6 @@ def translate_forces(forces, key):
 			new_forces.append(line)
 
 	return new_forces;
-
-""" Use the format norm_forces = normalize(forces) when calling this function.
-Returns a force matrix that is normalized between 1 and 32 for VMD.
-"""
-def vmd_bond_norm(force_values):
-	norm_values = []
-	for line in force_values:
-		norm_values.append(line[0])
-
-	minimum = copy.deepcopy(min(norm_values))
-	maximum = copy.deepcopy(max(norm_values))
-
-	norm_max = max(norm_values)/15
-	norm_min = min(norm_values)/-15
-	for i in range(len(norm_values)):
-		if norm_values[i] > 0:
-			norm_values[i] /= norm_max
-		else:
-			norm_values[i] /= norm_min
-		norm_values[i] += 16
-		norm_values[i] = int(norm_values[i])
-		
-	norm_force_values = force_values
-	for i in range(len(norm_force_values)):
-		norm_force_values[i][0] = norm_values[i]
-		
-	return norm_force_values, minimum, maximum;
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
 Returns a force matrix that is normalized between 1 and 32 for VMD.
@@ -191,7 +164,7 @@ def compress_forces(bonds, forces):
 	for bond in bonds:
 		for force in forces:
 			if bond[0] in force[1] and bond[1] in force[1]:
-				force_list.append([abs(force[0]), [bond[0],bond[1]]])
+				force_list.append([force[0], [bond[0],bond[1]]])
 	forces_compressed = []
 	for bond in bonds:
 		forces_compressed.append([0, bond])
@@ -229,7 +202,4 @@ def combine_dummies(forces, geometry, force_type):
 	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	if force_type == "bond":
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_bond_header.tcl")
-	else:
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
