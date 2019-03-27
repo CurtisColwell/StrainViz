@@ -55,23 +55,32 @@ def force_parse(file):
 	force_data = []
 	force_list = []
 		
-	#Get force constants
+	#Get first force constants
 	for line in output_lines:
 		if '      Item               Value     Threshold  Converged?' in line and read_line == True:
-			break
+			read_line = False
+			continue
 		if '                              (Linear)    (Quad)   (Total)' in line:
 			read_line = True
 			continue
 		if read_line == True:
 			force_data.append(line.split())
-	for line in force_data:
-		force_list.append([float(line[2])*float(line[5])])
-		
-	#Add connectivity data
+	
+	#Get connectivity data
 	connectivity_data = get_connectivity_data(output_lines)
 	
-	for index, line in enumerate(force_list):
-		line.append(connectivity_data[index])
+	for index, line in enumerate(connectivity_data):
+		line.append(force_data[index][0])
+	
+	for line in connectivity_data:
+		line.append(0)
+		for force in force_data:
+			if line[-2] == force[0]:
+				line[-1] += float(force[2])*float(force[5])
+	
+	#Reformat into list of [force, coords]
+	for line in connectivity_data:
+		force_list.append([line[-1], line[:-2]])
 	
 	#Split into bond, angle, and dihedral forces
 	bond_forces = []

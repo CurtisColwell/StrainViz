@@ -5,13 +5,14 @@ def get_atom_coords(output_lines):
 	read_line = False
 	atom_coords_raw = []
 	for line in output_lines:
-		if ' The following ModRedundant input section has been read:' in line and read_line == True:
+		if 'GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad' in line and read_line == True:
 			break
 		if ' Symbolic Z-matrix:' in line:
 			read_line = True
 			continue
 		if read_line == True:
 			atom_coords_raw.append(line.split())
+	atom_coords_raw.pop()
 	atom_coords_raw.pop()
 	atom_coords_raw.pop(0)
 	
