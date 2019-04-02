@@ -212,3 +212,30 @@ def combine_dummies(forces, geometry, force_type):
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	
+""" This function combines all the dummies into a single picture. Forces is a list with 
+the format forces[0] = [force, [c1, c2]]"""
+def combine_force_types(forces, geometry):
+
+	#Make a bond list
+	bond_list = []
+	for line in forces:
+		if line[1] in bond_list:
+			continue
+		else:
+			bond_list.append(line[1])
+	
+	#Now make the new force list
+	new_forces = []
+	for line in bond_list:
+		new_forces.append([0, line])
+	
+	#Average the forces for each bond
+	for bond in new_forces:
+		for line in forces:
+			if bond[1] == line[1]:
+				bond[0] += line[0]
+	
+	#Write the forces to a .tcl script
+	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
+	vmd_writer("vmd_total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")

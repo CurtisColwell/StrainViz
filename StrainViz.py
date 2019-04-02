@@ -40,6 +40,9 @@ combine_dummies(full_bond_forces, geometry_filename, "bond")
 combine_dummies(full_angle_forces, geometry_filename, "angle")
 combine_dummies(full_dihedral_forces, geometry_filename, "dihedral")
 
+total_forces = full_bond_forces + full_angle_forces + full_dihedral_forces
+combine_force_types(total_forces, geometry_filename)
+
 full_atom_forces = []
 for file in os.listdir('dummies'):
     if file.endswith(".out"):
