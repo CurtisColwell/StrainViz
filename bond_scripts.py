@@ -209,9 +209,13 @@ def combine_dummies(forces, geometry, force_type):
 				x += 1
 		bond[0] /= x
 	
+	output_forces = copy.deepcopy(new_forces)
+	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	
+	return output_forces;
 	
 """ This function combines all the dummies into a single picture. Forces is a list with 
 the format forces[0] = [force, [c1, c2]]"""
