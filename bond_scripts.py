@@ -46,41 +46,65 @@ calling this function. Returns lists of bond, angle, and dihedral forces.
 """
 def force_parse(file):
 	#Read file into python and format into list
-	output_file = open(file,'r')
-	output_text = output_file.read()
-	output_lines = output_text.splitlines()
+	output_lines = open(file,'r').read().splitlines()
 
 	#Initialize needed variables
 	read_line = False
-	force_data = []
+	force_data = [[]]
 	force_list = []
 		
 	#Get first force constants
+	x = 0
 	for line in output_lines:
 		if '      Item               Value     Threshold  Converged?' in line and read_line == True:
 			read_line = False
+			force_data.append([])
+			x += 1
 			continue
 		if '                              (Linear)    (Quad)   (Total)' in line:
 			read_line = True
 			continue
 		if read_line == True:
-			force_data.append(line.split())
+			force_data[x].append(line.split())
 	
+	force_data.pop()
+	force_data.pop()
+	
+	#Get energy at each step
+	step_energy = []
+	for line in output_lines:
+		if 'SCF Done:' in line:
+			step_energy.append(float(line.split()[4]))
+	
+	#Get energy change at each step
+	step_energy_change = []
+	for index, energy in enumerate(step_energy[:-1]):
+		step_energy_change.append(step_energy[index+1]-step_energy[index])
+			
+	#Get predicted change in energy for the step
+	pred_step_energy_change = []
+	for set in force_data:
+		energy = 0
+		for line in set:
+			energy += float(line[2])*float(line[5])
+		pred_step_energy_change.append(energy)
+	
+	#Create scaling factor for each energy step
+	scale_factor = []
+	for index, energy in enumerate(step_energy_change):
+		scale_factor.append(-energy/pred_step_energy_change[index])
+
 	#Get connectivity data
 	connectivity_data = get_connectivity_data(output_lines)
 	
 	for index, line in enumerate(connectivity_data):
-		line.append(force_data[index][0])
-	
-	for line in connectivity_data:
 		line.append(0)
-		for force in force_data:
-			if line[-2] == force[0]:
-				line[-1] += float(force[2])*float(force[5])
+		for i, set in enumerate(force_data):
+			line[-1] += float(set[index][2])*float(set[index][5])*scale_factor[i]
 	
 	#Reformat into list of [force, coords]
 	for line in connectivity_data:
-		force_list.append([line[-1], line[:-2]])
+		force_list.append([line[-1], line[:-1]])
 	
 	#Split into bond, angle, and dihedral forces
 	bond_forces = []
