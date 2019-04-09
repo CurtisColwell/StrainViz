@@ -31,13 +31,13 @@ def map_forces(geometry, force_output):
 	copy_angle_forces = copy.deepcopy(compressed_angle_forces)
 	copy_dihedral_forces = copy.deepcopy(compressed_dihedral_forces)
 	
-	bond_forces_vmd, bond_min, bond_max = vmd_bond_norm(mapped_bond_forces)
+	bond_forces_vmd, bond_min, bond_max = vmd_norm(mapped_bond_forces)
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_bond_header.tcl")
-	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_angle_and_dihedral_header.tcl")
-	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_header.tcl")
+	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_header.tcl")
+	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_header.tcl")
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
@@ -46,32 +46,65 @@ calling this function. Returns lists of bond, angle, and dihedral forces.
 """
 def force_parse(file):
 	#Read file into python and format into list
-	output_file = open(file,'r')
-	output_text = output_file.read()
-	output_lines = output_text.splitlines()
+	output_lines = open(file,'r').read().splitlines()
 
 	#Initialize needed variables
 	read_line = False
-	force_data = []
+	force_data = [[]]
 	force_list = []
 		
-	#Get force constants
+	#Get first force constants
+	x = 0
 	for line in output_lines:
 		if '      Item               Value     Threshold  Converged?' in line and read_line == True:
-			break
+			read_line = False
+			force_data.append([])
+			x += 1
+			continue
 		if '                              (Linear)    (Quad)   (Total)' in line:
 			read_line = True
 			continue
 		if read_line == True:
-			force_data.append(line.split())
-	for line in force_data:
-		force_list.append([float(line[2])])
-		
-	#Add connectivity data
+			force_data[x].append(line.split())
+	
+	force_data.pop()
+	force_data.pop()
+	
+	#Get energy at each step
+	step_energy = []
+	for line in output_lines:
+		if 'SCF Done:' in line:
+			step_energy.append(float(line.split()[4]))
+	
+	#Get energy change at each step
+	step_energy_change = []
+	for index, energy in enumerate(step_energy[:-1]):
+		step_energy_change.append(step_energy[index+1]-step_energy[index])
+			
+	#Get predicted change in energy for the step
+	pred_step_energy_change = []
+	for set in force_data:
+		energy = 0
+		for line in set:
+			energy += float(line[2])*float(line[5])
+		pred_step_energy_change.append(energy)
+	
+	#Create scaling factor for each energy step
+	scale_factor = []
+	for index, energy in enumerate(step_energy_change):
+		scale_factor.append(-energy/pred_step_energy_change[index])
+
+	#Get connectivity data
 	connectivity_data = get_connectivity_data(output_lines)
 	
-	for index, line in enumerate(force_list):
-		line.append(connectivity_data[index])
+	for index, line in enumerate(connectivity_data):
+		line.append(0)
+		for i, set in enumerate(force_data):
+			line[-1] += float(set[index][2])*float(set[index][5])*scale_factor[i]
+	
+	#Reformat into list of [force, coords]
+	for line in connectivity_data:
+		force_list.append([line[-1], line[:-1]])
 	
 	#Split into bond, angle, and dihedral forces
 	bond_forces = []
@@ -108,33 +141,6 @@ def translate_forces(forces, key):
 			new_forces.append(line)
 
 	return new_forces;
-
-""" Use the format norm_forces = normalize(forces) when calling this function.
-Returns a force matrix that is normalized between 1 and 32 for VMD.
-"""
-def vmd_bond_norm(force_values):
-	norm_values = []
-	for line in force_values:
-		norm_values.append(line[0])
-
-	minimum = copy.deepcopy(min(norm_values))
-	maximum = copy.deepcopy(max(norm_values))
-
-	norm_max = max(norm_values)/15
-	norm_min = min(norm_values)/-15
-	for i in range(len(norm_values)):
-		if norm_values[i] > 0:
-			norm_values[i] /= norm_max
-		else:
-			norm_values[i] /= norm_min
-		norm_values[i] += 16
-		norm_values[i] = int(norm_values[i])
-		
-	norm_force_values = force_values
-	for i in range(len(norm_force_values)):
-		norm_force_values[i][0] = norm_values[i]
-		
-	return norm_force_values, minimum, maximum;
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
 Returns a force matrix that is normalized between 1 and 32 for VMD.
@@ -191,7 +197,7 @@ def compress_forces(bonds, forces):
 	for bond in bonds:
 		for force in forces:
 			if bond[0] in force[1] and bond[1] in force[1]:
-				force_list.append([abs(force[0]), [bond[0],bond[1]]])
+				force_list.append([force[0]/(len(force[1])-1), [bond[0],bond[1]]])
 	forces_compressed = []
 	for bond in bonds:
 		forces_compressed.append([0, bond])
@@ -227,9 +233,37 @@ def combine_dummies(forces, geometry, force_type):
 				x += 1
 		bond[0] /= x
 	
+	output_forces = copy.deepcopy(new_forces)
+	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	if force_type == "bond":
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_bond_header.tcl")
-	else:
-		vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_angle_and_dihedral_header.tcl")
+	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	
+	return output_forces;
+	
+""" This function combines all the dummies into a single picture. Forces is a list with 
+the format forces[0] = [force, [c1, c2]]"""
+def combine_force_types(forces, geometry):
+
+	#Make a bond list
+	bond_list = []
+	for line in forces:
+		if line[1] in bond_list:
+			continue
+		else:
+			bond_list.append(line[1])
+	
+	#Now make the new force list
+	new_forces = []
+	for line in bond_list:
+		new_forces.append([0, line])
+	
+	#Average the forces for each bond
+	for bond in new_forces:
+		for line in forces:
+			if bond[1] == line[1]:
+				bond[0] += line[0]
+	
+	#Write the forces to a .tcl script
+	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
+	vmd_writer("vmd_total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")

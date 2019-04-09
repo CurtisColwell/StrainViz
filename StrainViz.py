@@ -36,9 +36,12 @@ for file in os.listdir('dummies'):
         for line in c:
             full_dihedral_forces.append(line)
 
-combine_dummies(full_bond_forces, geometry_filename, "bond")
-combine_dummies(full_angle_forces, geometry_filename, "angle")
-combine_dummies(full_dihedral_forces, geometry_filename, "dihedral")
+averaged_bond_forces = combine_dummies(full_bond_forces, geometry_filename, "bond")
+averaged_angle_forces = combine_dummies(full_angle_forces, geometry_filename, "angle")
+averaged_dihedral_forces = combine_dummies(full_dihedral_forces, geometry_filename, "dihedral")
+
+total_forces = averaged_bond_forces + averaged_angle_forces + averaged_dihedral_forces
+combine_force_types(total_forces, geometry_filename)
 
 full_atom_forces = []
 for file in os.listdir('dummies'):
