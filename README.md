@@ -30,8 +30,8 @@ files in the dummies/ directory.
 5. Run the proton_opt.py script to create input files that will optimize 
 the proton added to the dummy molecules using Gaussian.
 
-6. Once the proton has been optimized, use Gaussian to calculate molecular 
-forces using the keyword "Force Geom=ModRedundant".
+6. Once the proton has been optimized, use Gaussian to calculate energies by 
+running geometry optimization on the fragments.
 
 7. Run the StrainViz.py script to create four .tcl files for the bond, angle 
 and dihedral strain and force on all atoms for each dummy file and four files 
