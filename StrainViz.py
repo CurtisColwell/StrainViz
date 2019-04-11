@@ -43,6 +43,11 @@ averaged_dihedral_forces = combine_dummies(full_dihedral_forces, geometry_filena
 total_forces = averaged_bond_forces + averaged_angle_forces + averaged_dihedral_forces
 combine_force_types(total_forces, geometry_filename)
 
+print_total(total_forces, "Total strain")
+print_total(averaged_bond_forces, "Bond strain")
+print_total(averaged_angle_forces, "Angle strain")
+print_total(averaged_dihedral_forces, "Dihedral strain")
+
 full_atom_forces = []
 for file in os.listdir('dummies'):
     if file.endswith(".out"):
