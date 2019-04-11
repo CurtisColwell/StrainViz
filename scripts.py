@@ -119,3 +119,8 @@ def create_protonopts(base, dummy):
 		script.write("\n")
 	script.write("\n")
 	
+def print_total(energies, type):
+	energy = 0
+	for line in energies:
+		energy += line[0]
+	print(type + " is " + str(energy*627.509) + "kcal/mol")
