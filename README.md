@@ -28,10 +28,15 @@ that will allow the molecule to release its strain and saving them as .xyz
 files in the dummies/ directory.
 
 5. Run the proton_opt.py script to create input files that will optimize 
-the proton added to the dummy molecules using Gaussian.
+the proton added to the dummy molecules using Gaussian and place the output 
+files in the dummies/ folder.
 
-6. Once the proton has been optimized, use Gaussian to calculate energies by 
-running geometry optimization on the fragments.
+6. Once the proton has been optimized, run the dummy_inp.py script to generate 
+Gaussian input files. This will remove the proton_opt input and output files.
+Run the input files and put the output files in the dummies/ folder.
+```
+python dummy_inp.py
+```
 
 7. Run the StrainViz.py script to create four .tcl files for the bond, angle 
 and dihedral strain and force on all atoms for each dummy file and four files 
