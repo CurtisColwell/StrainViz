@@ -1,5 +1,6 @@
 import os
-""" Get atom coordinates
+""" Get atom coordinates from a list of the output lines as a list of lists containing the number, 
+atom type, and x, y, and z coordinates
 """
 def get_atom_coords(output_lines):
 	read_line = False
@@ -22,7 +23,8 @@ def get_atom_coords(output_lines):
 		
 	return atom_coords;
 	
-""" Get connectivity data
+""" Get connectivity data from a list of the output lines as a list of lists containing two 
+connected atoms
 """
 def get_connectivity_data(output_lines):
 	read_line = False
@@ -43,7 +45,8 @@ def get_connectivity_data(output_lines):
 	
 	return connectivity_data;
 
-""" Load geometry atoms into list
+""" Load geometry atoms from .xyz file into a list of lists containing the number, 
+atom type, and x, y, and z coordinates
 """
 def load_geometry(geometry):
 	output_file = open(geometry,'r')
@@ -58,8 +61,8 @@ def load_geometry(geometry):
 		
 	return atom_list;
 
-"""Create a key to correlate dummy atoms to base geometry atoms
-First number is dummy atom, second number is base geometry atom
+""" Create a key to correlate dummy atoms to base geometry atoms
+Outputs a list of lists where the first number is dummy atom, second number is base geometry atom
 """
 def create_key(base_atoms, dummy_atoms, bond_atoms):
 	key = []
@@ -92,9 +95,9 @@ def create_key(base_atoms, dummy_atoms, bond_atoms):
 			
 	return trimmed_key;
 	
-""" This function uses the base geometry.xyz and dummy.xyz files to create Gaussian 
-input files to optimize any added or out of place atoms from dummy creation"""
-
+""" This function uses the base geometry.xyz and dummy.xyz files to create a Gaussian 
+input file to optimize the added protons from dummy creation
+"""
 def create_protonopts(base, dummy):
 	base_geometry = load_geometry(base)
 	dummy_geometry = load_geometry(dummy)
@@ -119,6 +122,9 @@ def create_protonopts(base, dummy):
 		script.write("\n")
 	script.write("\n")
 
+""" This function uses the output from the proton optimization to create a Gaussian input 
+file for the strain calculation
+"""
 def create_input(file):
 	output_lines = open(file,'r').read().splitlines()
 	
@@ -154,6 +160,8 @@ def create_input(file):
 	os.remove(file)
 	os.remove(os.path.splitext(file)[0] + ".inp")
 
+""" This sums the energies for each bond in the molecule and prints a total energy in kcal/mol
+"""
 def print_total(energies, type):
 	energy = 0
 	for line in energies:

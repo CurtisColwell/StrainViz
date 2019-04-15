@@ -1,7 +1,8 @@
 from scripts import get_atom_coords, get_connectivity_data, load_geometry, create_key
 import os
 import copy
-""" Maps the force values from the output file onto the geom.xyz file.
+""" Maps the force values from the output file onto the original geometry .xyz file by digesting 
+the output files and writing .tcl scripts to by viewed in VMD
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
@@ -41,8 +42,8 @@ def map_forces(geometry, force_output):
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
-""" Use the format var_a, var_b, var_c = force_parse("outputfile.out") when 
-calling this function. Returns lists of bond, angle, and dihedral forces.
+""" Use the format atoms, bond_forces, angle_forces, dihedral_forces = force_parse("outputfile.out") 
+when calling this function. Returns lists of bond, angle, and dihedral forces.
 """
 def force_parse(file):
 	#Read file into python and format into list
@@ -143,7 +144,7 @@ def translate_forces(forces, key):
 	return new_forces;
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
-Returns a force matrix that is normalized between 1 and 32 for VMD.
+Returns a force matrix that is normalized between 1 and 32 for VMD colours.
 """
 def vmd_norm(force_values):
 	norm_values = []
