@@ -15,7 +15,6 @@ and as many .out gaussian output files from force calculations as necessary into
 
 from scripts import *
 from bond_scripts import *
-from atom_scripts import *
 import os
 
 for file in os.listdir('geometry'):

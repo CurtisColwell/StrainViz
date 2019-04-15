@@ -1,12 +1,6 @@
 import os
 
-dummies = []
-for file in os.listdir('dummies'):
-    if file.endswith("protonopt.out"):
-        dummies.append('dummies/' + file)
-
-for file in dummies:
-    create_input(file)
+"""Definitions"""
 
 """ This function uses the output from the proton optimization to create a Gaussian input 
 file for the strain calculation
@@ -45,3 +39,12 @@ def create_input(file):
 	
 	os.remove(file)
 	os.remove(os.path.splitext(file)[0] + ".inp")
+
+""" Execution """
+dummies = []
+for file in os.listdir('dummies'):
+    if file.endswith("protonopt.out"):
+        dummies.append('dummies/' + file)
+
+for file in dummies:
+    create_input(file)

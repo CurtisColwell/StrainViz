@@ -49,7 +49,7 @@ def get_connectivity_data(output_lines):
 atom type, and x, y, and z coordinates
 """
 def load_geometry(geometry):
-	output_lines = open(geometry,'r').read().output_text.splitlines()
+	output_lines = open(geometry,'r').read().splitlines()
 	output_lines.pop(0)
 	output_lines.pop(0)
 	atom_list = []
