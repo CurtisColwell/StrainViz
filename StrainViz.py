@@ -47,12 +47,3 @@ print_total(total_forces, "Total strain")
 print_total(averaged_bond_forces, "Bond strain")
 print_total(averaged_angle_forces, "Angle strain")
 print_total(averaged_dihedral_forces, "Dihedral strain")
-
-full_atom_forces = []
-for file in os.listdir('dummies'):
-    if file.endswith(".out"):
-        a = map_atom_forces(geometry_filename, file)
-        for line in a:
-            full_atom_forces.append(line)
-
-combine_dummy_arrows(geometry_filename, full_atom_forces)

@@ -49,9 +49,7 @@ def get_connectivity_data(output_lines):
 atom type, and x, y, and z coordinates
 """
 def load_geometry(geometry):
-	output_file = open(geometry,'r')
-	output_text = output_file.read()
-	output_lines = output_text.splitlines()
+	output_lines = open(geometry,'r').read().output_text.splitlines()
 	output_lines.pop(0)
 	output_lines.pop(0)
 	atom_list = []
@@ -94,71 +92,6 @@ def create_key(base_atoms, dummy_atoms, bond_atoms):
 			trimmed_key.append(line)
 			
 	return trimmed_key;
-	
-""" This function uses the base geometry.xyz and dummy.xyz files to create a Gaussian 
-input file to optimize the added protons from dummy creation
-"""
-def create_protonopts(base, dummy):
-	base_geometry = load_geometry(base)
-	dummy_geometry = load_geometry(dummy)
-	
-	input_geometry = []
-	for dummy_atom in dummy_geometry:
-		for base_atom in base_geometry:
-			found = False
-			if dummy_atom[1:4] == base_atom[1:4]:
-				input_geometry.append([dummy_atom[0],dummy_atom[1],"-1",dummy_atom[2],dummy_atom[3],dummy_atom[4]])
-				found = True
-				break
-		if found == False:
-			input_geometry.append(dummy_atom)
-	
-	script = open(os.path.splitext(dummy)[0] + "_protonopt.inp", "w")
-	script.write("#n B3LYP/6-31G(d) opt\n\n")
-	script.write(" proton optimization\n\n0 1\n")
-	for atom in input_geometry:
-		for x in atom[1:]:
-			script.write("%s\t" % x)
-		script.write("\n")
-	script.write("\n")
-
-""" This function uses the output from the proton optimization to create a Gaussian input 
-file for the strain calculation
-"""
-def create_input(file):
-	output_lines = open(file,'r').read().splitlines()
-	
-	read_line = False
-	
-	for line in output_lines:
-		if ' Rotational constants (GHZ):' in line and read_line == True:
-			read_line = False
-			continue
-		if ' Number     Number       Type             X           Y           Z' in line:
-			coordinates = []
-			read_line = True
-			continue
-		if read_line == True:
-			coordinates.append(line.split())
-	
-	coordinates.pop()
-	coordinates.pop(0)
-	
-	periodic_table_text = open("headers/periodic_table.txt",'r').read().splitlines()
-	periodic_table = {}
-	for element in periodic_table_text:
-		periodic_table[element.split()[0]] = element.split()[1]
-
-	script = open(file[:-14] + ".inp", "w")
-	script.write("#n B3LYP/6-31G(d) opt\n\n")
-	script.write(" geometry optimization\n\n0 1\n")
-	for atom in coordinates:
-		script.write("%s\t%s\t%s\t%s\t" % (periodic_table[atom[1]], atom[3], atom[4], atom[5]))
-		script.write("\n")
-	script.write("\n")
-	
-	os.remove(file)
-	os.remove(os.path.splitext(file)[0] + ".inp")
 
 """ This sums the energies for each bond in the molecule and prints a total energy in kcal/mol
 """
