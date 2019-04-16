@@ -11,7 +11,11 @@ strain. All the scripts used to do this are written in Python.
 
 ## Installation
 
-After downloading this repository, no installation is necessary.
+Run the following command on a UNIX command line:
+```
+git clone https://github.com/CurtisColwell/StrainViz.git
+```
+Or download as a zip file from the repository homepage
 
 ## Instructions
 
