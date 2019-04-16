@@ -1,6 +1,8 @@
 import os
 from scripts import load_geometry
 
+# Definitions
+
 """ This function uses the base geometry.xyz and dummy.xyz files to create a Gaussian 
 input file to optimize the added protons from dummy creation
 """
@@ -27,6 +29,8 @@ def create_protonopts(base, dummy):
 			script.write("%s\t" % x)
 		script.write("\n")
 	script.write("\n")
+
+# Execution
 
 for file in os.listdir('geometry'):
     if file.endswith(".xyz"):

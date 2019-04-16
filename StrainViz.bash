@@ -6,23 +6,25 @@ cd dummies
 # Get a list of the dummy file names
 INPUT_NAMES=()
 while IFS=  read -r -d $'\0'; do
-	# Remove the leading .
+	# Remove the leading ./ and following .ext
 	INPUT_NAME=${REPLY##*/}
 	INPUT_NAME=${INPUT_NAME%.*}
+    # Add to list
 	INPUT_NAMES+=("$INPUT_NAME")
-done < <(find . -type f -print0)
+done < <(find . -type f -name "*.xyz" -print0)
 
 cd ..
 # Create _protonopt.inp files to optimize the proton in Gaussian from the dummy .xyz files
 python proton_opt.py
-echo "Proton optimization files created."
+echo "[$(date +"%Y-%m-%d %T")] Proton optimization files created."
 
 
 cd dummies
+fileend="_protonopt"
 # Run the _protonopt.inp files in Gaussian to get _protonopt.out files
 for file in "${INPUT_NAMES[@]}"; do
-    g09 < "$file_protonopt.inp" > "$file_protonopt.out"
-    echo "$file Gaussian run successful."
+    g09 < "$file$fileend.inp" > "$file$fileend.out"
+    echo "[$(date +"%Y-%m-%d %T")] $file protons optimized."
 done
 
 cd ..
@@ -36,10 +38,10 @@ cd dummies
 # Run the .inp files in Gaussian to get .out files
 for file in "${INPUT_NAMES[@]}"; do
     g09 < "$file.inp" > "$file.out"
-    echo "$file Gaussian run successful."
+    echo "[$DATE] $file Gaussian run successful."
 done
 
 cd ..
 # Calculates the strain and creates .tcl files to be visualized in VMD
 python StrainViz.py
-echo "StrainViz analysis finished."
+echo "[$DATE] StrainViz analysis finished."
