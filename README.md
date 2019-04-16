@@ -15,6 +15,10 @@ After downloading this repository, no installation is necessary.
 
 ## Instructions
 
+The strain analysis uses the optimization of destrained fragments of the 
+molecule to construct a picture of the strain energy mapped onto the bonds 
+containing the strain.
+
 1. Model the strained compound in Avogadro and create a Gaussian 
 input file to optimize the geometry.
 
@@ -27,22 +31,14 @@ geometry/ directory.
 that will allow the molecule to release its strain and saving them as .xyz 
 files in the dummies/ directory.
 
-5. Run the proton_opt.py script to create input files that will optimize 
-the proton added to the dummy molecules using Gaussian and place the output 
-files in the dummies/ folder.
-
-6. Once the proton has been optimized, run the dummy_inp.py script to generate 
-Gaussian input files. This will remove the proton_opt input and output files.
-Run the input files and put the output files in the dummies/ folder.
+5. Run StrainViz using the following command
 ```
-python dummy_inp.py
+bash StrainViz.bash
 ```
+This creates four .tcl files for the bond, angle and dihedral strain for each 
+dummy file and four files that combine all the dummies into a total representation.
 
-7. Run the StrainViz.py script to create four .tcl files for the bond, angle 
-and dihedral strain and force on all atoms for each dummy file and four files 
-that combine all the dummies into a total representation.
-
-8. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
+6. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
 project folder, and run the command:
 ```
 source output/example.tcl
