@@ -29,11 +29,12 @@ input file to optimize the geometry.
 2. Use Gaussian to create an optimized geometry output file.
 
 3. Open the output file in avogadro and save as an .xyz file in the 
-geometry/ directory.
+geometry/ directory. Make sure that this is the only file in the folder
 
 4. Create dummy files by symmetrically deleting portions of the molecule 
 that will allow the molecule to release its strain and saving them as .xyz 
-files in the dummies/ directory.
+files in the dummies/ directory. Make sure that these files are the only 
+files in the folder.
 
 5. Run StrainViz using the following command
 ```
