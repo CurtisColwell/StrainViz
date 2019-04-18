@@ -29,7 +29,7 @@ input file to optimize the geometry.
 2. Use Gaussian to create an optimized geometry output file.
 
 3. Open the output file in avogadro and save as an .xyz file in the 
-geometry/ directory. Make sure that this is the only file in the folder
+geometry/ directory. Make sure that this is the only file in the folder.
 
 4. Create dummy files by symmetrically deleting portions of the molecule 
 that will allow the molecule to release its strain and saving them as .xyz 
