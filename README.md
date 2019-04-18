@@ -28,20 +28,20 @@ input file to optimize the geometry.
 
 2. Use Gaussian to create an optimized geometry output file.
 
-3. Open the output file in avogadro and save as an .xyz file in the 
-geometry/ directory. Make sure that this is the only file in the folder.
+3. Open the output file in avogadro and save as molecule-name.xyz in the 
+geometry/ directory. Create a directory with the same name.
 
-4. Create dummy files by symmetrically deleting portions of the molecule 
+4. Create fragments by symmetrically deleting portions of the molecule 
 that will allow the molecule to release its strain and saving them as .xyz 
-files in the dummies/ directory. Make sure that these files are the only 
-files in the folder.
+files in the directory named after the original molecule.
 
 5. Run StrainViz using the following command
 ```
-bash StrainViz.bash
+bash StrainViz.bash molecule-name
 ```
-This creates four .tcl files for the bond, angle and dihedral strain for each 
-dummy file and four files that combine all the dummies into a total representation.
+This runs multiple Gaussian jobs on each fragment and analyzes the results creating 
+four .tcl files for the bond, angle and dihedral strain for each fragment and four 
+files that combine the fragments into a total representation.
 
 6. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
 project folder, and run the command:
