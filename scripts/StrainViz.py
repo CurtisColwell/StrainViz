@@ -1,38 +1,22 @@
-"""
-The script will exist in a distributable file package with the following architecture:
-
-Strain_modeler/   
-|-- geometry/  
-|-- dummies/
-|-- output/  
-|-- scripts.py
-|-- README.md
-1. The user will create a geometry folder, add a .xyz geometry of the optimized strained molecule, 
-and as many .out gaussian output files from force calculations as necessary into the dummies folder.
-2. A script will compile and average all of the .out files to create .tcl scripts in the output folder.
-3. The user can then run the .tcl scripts in VMD to visualize each type of molecular strain.
-"""
-
 from scripts import *
 from bond_scripts import *
 import os
+import sys
 
-for file in os.listdir('geometry'):
-    if file.endswith(".xyz"):
-        geometry_filename = 'geometry/' + file
+geometry_filename = 'input/' + sys.argv[1] + ".xyz"
 		
 full_bond_forces = []
 full_angle_forces = []
 full_dihedral_forces = []
 full_key = []
-for file in os.listdir('dummies'):
+for file in os.listdir(geometry_filename[:-4]):
     if file.endswith(".out"):
-        a, b, c = map_forces(geometry_filename, file)
-        for line in a:
+        bond, angle, dihedral = map_forces(geometry_filename, file)
+        for line in bond:
             full_bond_forces.append(line)
-        for line in b:
+        for line in angle:
             full_angle_forces.append(line)
-        for line in c:
+        for line in dihedral:
             full_dihedral_forces.append(line)
 
 averaged_bond_forces = combine_dummies(full_bond_forces, geometry_filename, "bond")

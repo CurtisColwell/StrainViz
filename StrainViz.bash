@@ -1,7 +1,7 @@
 #!bin/bash
 set -e
 
-cd dummies
+cd input/$1
 # Get a list of the dummy file names
 INPUT_NAMES=()
 while IFS=  read -r -d $'\0'; do
@@ -12,12 +12,12 @@ while IFS=  read -r -d $'\0'; do
 	INPUT_NAMES+=("$INPUT_NAME")
 done < <(find . -type f -name "*.xyz" -print0)
 
-cd ..
+cd ../..
 # Create _protonopt.inp files to optimize the proton in Gaussian from the dummy .xyz files
-python proton_opt.py
+python scripts/proton_opt.py $1
 echo "[$(date +"%Y-%m-%d %T")] Proton optimization files created."
 
-cd dummies
+cd input/$1
 fileend="_protonopt"
 # Run the _protonopt.inp files in Gaussian to get _protonopt.out files
 module load gaussian
@@ -26,21 +26,21 @@ for file in "${INPUT_NAMES[@]}"; do
     echo "[$(date +"%Y-%m-%d %T")] $file protons optimized."
 done
 
-cd ..
+cd ../..
 # Create .inp files to calculate the energy in Gaussian from the _protonopt.out files and 
 # deletes the protonopt files
-python dummy_inp.py
+python scripts/input_gen.py $1
 echo "[$(date +"%Y-%m-%d %T")] Gaussian input files created."
 
 
-cd dummies
+cd input/$1
 # Run the .inp files in Gaussian to get .out files
 for file in "${INPUT_NAMES[@]}"; do
     g09 < "$file.inp" > "$file.out"
     echo "[$(date +"%Y-%m-%d %T")] $file Gaussian run successful."
 done
 
-cd ..
+cd ../..
 # Calculates the strain and creates .tcl files to be visualized in VMD
-python StrainViz.py
+python scripts/StrainViz.py $1
 echo "[$(date +"%Y-%m-%d %T")] StrainViz analysis finished."

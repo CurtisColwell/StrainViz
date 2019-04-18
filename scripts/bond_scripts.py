@@ -6,14 +6,14 @@ the output files and writing .tcl scripts to by viewed in VMD
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
-	atoms, bond_forces, angle_forces, dihedral_forces = force_parse("dummies/" + force_output)
+	atoms, bond_forces, angle_forces, dihedral_forces = force_parse(geometry[:-4] + "/" + force_output)
 	
 	bond_atoms = []
 	for line in bond_forces:
 		bond_atoms.append(bond_forces[1])
 	
 	#Use the base geometry and unoptimized dummy geometry to create a key
-	key = create_key(load_geometry(geometry), load_geometry("dummies/" + os.path.splitext(force_output)[0] + ".xyz"), bond_atoms)
+	key = create_key(load_geometry(geometry), load_geometry(geometry[:-4] + "/" + os.path.splitext(force_output)[0] + ".xyz"), bond_atoms)
 				
 	mapped_bond_forces = translate_forces(bond_forces, key)
 	mapped_angle_forces = translate_forces(angle_forces, key)
@@ -36,9 +36,9 @@ def map_forces(geometry, force_output):
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("bond_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_header.tcl")
-	vmd_writer("angle_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_header.tcl")
-	vmd_writer("dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_header.tcl")
+	vmd_writer(geometry[:-4] + "/bond_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "scripts/vmd_header.tcl")
+	vmd_writer(geometry[:-4] + "/angle_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "scripts/vmd_header.tcl")
+	vmd_writer(geometry[:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "scripts/vmd_header.tcl")
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
@@ -238,7 +238,7 @@ def combine_dummies(forces, geometry, force_type):
 	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	vmd_writer(force_type + "_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	vmd_writer(geometry[:-4] + "/" + force_type + "_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "scripts/vmd_header.tcl")
 	
 	return output_forces;
 	
@@ -267,4 +267,4 @@ def combine_force_types(forces, geometry):
 	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	vmd_writer("total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	vmd_writer(geometry[:-4] + "/total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "scripts/vmd_header.tcl")
