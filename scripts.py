@@ -1,5 +1,6 @@
 import os
-""" Get atom coordinates
+""" Get atom coordinates from a list of the output lines as a list of lists containing the number, 
+atom type, and x, y, and z coordinates
 """
 def get_atom_coords(output_lines):
 	read_line = False
@@ -22,7 +23,8 @@ def get_atom_coords(output_lines):
 		
 	return atom_coords;
 	
-""" Get connectivity data
+""" Get connectivity data from a list of the output lines as a list of lists containing two 
+connected atoms
 """
 def get_connectivity_data(output_lines):
 	read_line = False
@@ -43,12 +45,11 @@ def get_connectivity_data(output_lines):
 	
 	return connectivity_data;
 
-""" Load geometry atoms into list
+""" Load geometry atoms from .xyz file into a list of lists containing the number, 
+atom type, and x, y, and z coordinates
 """
 def load_geometry(geometry):
-	output_file = open(geometry,'r')
-	output_text = output_file.read()
-	output_lines = output_text.splitlines()
+	output_lines = open(geometry,'r').read().splitlines()
 	output_lines.pop(0)
 	output_lines.pop(0)
 	atom_list = []
@@ -58,8 +59,8 @@ def load_geometry(geometry):
 		
 	return atom_list;
 
-"""Create a key to correlate dummy atoms to base geometry atoms
-First number is dummy atom, second number is base geometry atom
+""" Create a key to correlate dummy atoms to base geometry atoms
+Outputs a list of lists where the first number is dummy atom, second number is base geometry atom
 """
 def create_key(base_atoms, dummy_atoms, bond_atoms):
 	key = []
@@ -91,69 +92,9 @@ def create_key(base_atoms, dummy_atoms, bond_atoms):
 			trimmed_key.append(line)
 			
 	return trimmed_key;
-	
-""" This function uses the base geometry.xyz and dummy.xyz files to create Gaussian 
-input files to optimize any added or out of place atoms from dummy creation"""
 
-def create_protonopts(base, dummy):
-	base_geometry = load_geometry(base)
-	dummy_geometry = load_geometry(dummy)
-	
-	input_geometry = []
-	for dummy_atom in dummy_geometry:
-		for base_atom in base_geometry:
-			found = False
-			if dummy_atom[1:4] == base_atom[1:4]:
-				input_geometry.append([dummy_atom[0],dummy_atom[1],"-1",dummy_atom[2],dummy_atom[3],dummy_atom[4]])
-				found = True
-				break
-		if found == False:
-			input_geometry.append(dummy_atom)
-	
-	script = open(os.path.splitext(dummy)[0] + "_protonopt.inp", "w")
-	script.write("#n B3LYP/6-31G(d) opt\n\n")
-	script.write(" proton optimization\n\n0 1\n")
-	for atom in input_geometry:
-		for x in atom[1:]:
-			script.write("%s\t" % x)
-		script.write("\n")
-	script.write("\n")
-
-def create_input(file):
-	output_lines = open(file,'r').read().splitlines()
-	
-	read_line = False
-	
-	for line in output_lines:
-		if ' Rotational constants (GHZ):' in line and read_line == True:
-			read_line = False
-			continue
-		if ' Number     Number       Type             X           Y           Z' in line:
-			coordinates = []
-			read_line = True
-			continue
-		if read_line == True:
-			coordinates.append(line.split())
-	
-	coordinates.pop()
-	coordinates.pop(0)
-	
-	periodic_table_text = open("headers/periodic_table.txt",'r').read().splitlines()
-	periodic_table = {}
-	for element in periodic_table_text:
-		periodic_table[element.split()[0]] = element.split()[1]
-
-	script = open(file[:-14] + ".inp", "w")
-	script.write("#n B3LYP/6-31G(d) opt\n\n")
-	script.write(" geometry optimization\n\n0 1\n")
-	for atom in coordinates:
-		script.write("%s\t%s\t%s\t%s\t" % (periodic_table[atom[1]], atom[3], atom[4], atom[5]))
-		script.write("\n")
-	script.write("\n")
-	
-	os.remove(file)
-	os.remove(os.path.splitext(file)[0] + ".inp")
-
+""" This sums the energies for each bond in the molecule and prints a total energy in kcal/mol
+"""
 def print_total(energies, type):
 	energy = 0
 	for line in energies:

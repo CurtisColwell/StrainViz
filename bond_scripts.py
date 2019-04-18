@@ -1,7 +1,8 @@
 from scripts import get_atom_coords, get_connectivity_data, load_geometry, create_key
 import os
 import copy
-""" Maps the force values from the output file onto the geom.xyz file.
+""" Maps the force values from the output file onto the original geometry .xyz file by digesting 
+the output files and writing .tcl scripts to by viewed in VMD
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
@@ -35,14 +36,14 @@ def map_forces(geometry, force_output):
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
-	vmd_writer("vmd_bond_script_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_header.tcl")
-	vmd_writer("vmd_angle_script_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_header.tcl")
-	vmd_writer("vmd_dihedral_script_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_header.tcl")
+	vmd_writer("bond_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry, bond_min, bond_max, "headers/vmd_header.tcl")
+	vmd_writer("angle_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry, angle_min, angle_max, "headers/vmd_header.tcl")
+	vmd_writer("dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry, dihedral_min, dihedral_max, "headers/vmd_header.tcl")
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
-""" Use the format var_a, var_b, var_c = force_parse("outputfile.out") when 
-calling this function. Returns lists of bond, angle, and dihedral forces.
+""" Use the format atoms, bond_forces, angle_forces, dihedral_forces = force_parse("outputfile.out") 
+when calling this function. Returns lists of bond, angle, and dihedral forces.
 """
 def force_parse(file):
 	#Read file into python and format into list
@@ -143,7 +144,7 @@ def translate_forces(forces, key):
 	return new_forces;
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
-Returns a force matrix that is normalized between 1 and 32 for VMD.
+Returns a force matrix that is normalized between 1 and 32 for VMD colours.
 """
 def vmd_norm(force_values):
 	norm_values = []
@@ -237,7 +238,7 @@ def combine_dummies(forces, geometry, force_type):
 	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	vmd_writer("vmd_" + force_type + "_script_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	vmd_writer(force_type + "_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
 	
 	return output_forces;
 	
@@ -266,4 +267,4 @@ def combine_force_types(forces, geometry):
 	
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
-	vmd_writer("vmd_total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
+	vmd_writer("total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "headers/vmd_header.tcl")
