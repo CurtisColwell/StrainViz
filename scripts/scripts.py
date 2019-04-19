@@ -99,4 +99,4 @@ def print_total(energies, type):
 	energy = 0
 	for line in energies:
 		energy += line[0]
-	print(type + " is " + str(energy*627.509) + "kcal/mol")
+	print(type + " is " + str(energy*627.509) + " kcal/mol")

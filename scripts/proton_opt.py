@@ -1,4 +1,5 @@
 import os
+import sys
 from scripts import load_geometry
 
 # Definitions
@@ -32,15 +33,13 @@ def create_protonopts(base, dummy):
 
 # Execution
 
-for file in os.listdir('geometry'):
-    if file.endswith(".xyz"):
-        geometry_filename = 'geometry/' + file
+geometry_filename = "input/" + sys.argv[1] + ".xyz"
 
-dummies = []
-for file in os.listdir('dummies'):
+fragments = []
+for file in os.listdir(geometry_filename[:-4]):
     if file.endswith(".xyz"):
-        dummies.append('dummies/' + file)
+        fragments.append(geometry_filename[:-4] + "/" + file)
 
-for file in dummies:
+for file in fragments:
     create_protonopts(geometry_filename, file)
 

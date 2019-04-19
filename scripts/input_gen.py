@@ -1,4 +1,5 @@
 import os
+import sys
 
 # Definitions
 
@@ -24,7 +25,7 @@ def create_input(file):
 	coordinates.pop()
 	coordinates.pop(0)
 	
-	periodic_table_text = open("headers/periodic_table.txt",'r').read().splitlines()
+	periodic_table_text = open("scripts/periodic_table.txt",'r').read().splitlines()
 	periodic_table = {}
 	for element in periodic_table_text:
 		periodic_table[element.split()[0]] = element.split()[1]
@@ -42,10 +43,11 @@ def create_input(file):
 
 # Execution
 
-dummies = []
-for file in os.listdir('dummies'):
+fragments = []
+fragment_folder = "input/" + sys.argv[1] + "/"
+for file in os.listdir(fragment_folder):
     if file.endswith("protonopt.out"):
-        dummies.append('dummies/' + file)
+        fragments.append(fragment_folder + file)
 
-for file in dummies:
+for file in fragments:
     create_input(file)
