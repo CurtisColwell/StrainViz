@@ -29,7 +29,7 @@ input file to optimize the geometry.
 2. Use Gaussian to create an optimized geometry output file.
 
 3. Open the output file in avogadro and save as molecule-name.xyz in the 
-geometry/ directory. Create a directory with the same name.
+input/ directory. Create a new directory there with the same name.
 
 4. Create fragments by symmetrically deleting portions of the molecule 
 that will allow the molecule to release its strain and saving them as .xyz 
