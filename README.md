@@ -28,7 +28,7 @@ All manual steps are shown in green, all automated steps are shown in
 red, and all intermediate files are shown in blue. The proton optimization 
 files are deleted after being used.
 
-![StrainViz Block Diagram](https://raw.githubusercontent.com/CurtisColwell/StrainViz/master/block_diagram.png)
+![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/12_ian/scripts/block_diagram.png)
 
 1. Model the strained compound in Avogadro and create a Gaussian 
 input file to optimize the geometry.
