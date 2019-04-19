@@ -2,7 +2,7 @@
 # Maximum value: 0.00061179092363
 
 # Load a molecule
-mol new geometry/5cpp.xyz
+mol new example-molecule.xyz
 
 # Change bond radii and various resolution parameters
 mol representation cpk 0.8 0.0 30 5

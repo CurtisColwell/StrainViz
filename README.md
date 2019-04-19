@@ -40,16 +40,18 @@ the input/ directory. Create a directory with the same name.
 that will allow the molecule to release its strain and saving them as .xyz 
 files in the directory named after the original molecule.
 
-4. Run StrainViz using the following command
+4. Run StrainViz to run multiple Gaussian jobs on each fragment and analyze 
+the results. This creates .tcl files for the bond, angle and dihedral strain 
+for each fragment and the combination of the fragments.
 ```
 bash StrainViz.bash molecule-name
 ```
-This runs multiple Gaussian jobs on each fragment and analyzes the results creating 
-four .tcl files for the bond, angle and dihedral strain for each fragment and four 
-files that combine the fragments into a total representation.
 
 5. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
-project folder, and visualize the strain using the following command command:
+output/molecule-name/ folder, and visualize the strain using the following command:
 ```
-source output/example.tcl
+source example.tcl
 ```
+
+## Additional Information
+
