@@ -1,6 +1,7 @@
 #!bin/bash
 set -e
 
+cd "$(dirname "$0")"
 cd input/$1
 # Get a list of the dummy file names
 INPUT_NAMES=()
@@ -41,6 +42,7 @@ for file in "${INPUT_NAMES[@]}"; do
 done
 
 cd ../..
+mkdir -p output/$1
 # Calculates the strain and creates .tcl files to be visualized in VMD
 python scripts/StrainViz.py $1
 echo "[$(date +"%Y-%m-%d %T")] StrainViz analysis finished."

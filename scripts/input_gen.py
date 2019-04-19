@@ -44,7 +44,7 @@ def create_input(file):
 # Execution
 
 fragments = []
-fragment_folder = "input/" + sys.argv[1]
+fragment_folder = "input/" + sys.argv[1] + "/"
 for file in os.listdir(fragment_folder):
     if file.endswith("protonopt.out"):
         fragments.append(fragment_folder + file)
