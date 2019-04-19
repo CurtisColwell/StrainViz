@@ -43,3 +43,4 @@ fi
 # Teardown
 rm input/test.xyz
 rm -r input/test/
+rm -r output/test/
