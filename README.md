@@ -7,11 +7,10 @@ This is a tool to analyze the strain of inherently strained molecules.
 optimized geometry and strain of the molecule. 
 
 The strain analysis uses the optimization of destrained fragments of the 
-molecule to construct a picture of the strain energy mapped onto the bonds 
-containing the strain. 
+molecule to construct a picture of the strain energy mapped onto the bonds. 
 
 [VMD](https://www.ks.uiuc.edu/Research/vmd/) is used to visualize the 
-strain. All the scripts used to do this are written in Python. 
+strain. All the scripts used to do this are written in Python and Bash. 
 
 ## Installation
 
