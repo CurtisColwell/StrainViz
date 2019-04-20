@@ -1,8 +1,15 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/ruby:2.4.1
-    steps:
-      - checkout
-      - run: bash scripts/tests/test.bash
+  test_python_scripts:
+    build:
+      docker:
+        - image: circleci/ruby:2.4.1
+      steps:
+        - checkout
+        - run: bash scripts/tests/test.bash
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test_python_scripts
