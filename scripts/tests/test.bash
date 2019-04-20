@@ -2,7 +2,6 @@
 set -e
 
 # Set up
-
 cd "$(dirname "$0")"
 cp test.xyz ../../input/
 mkdir ../../input/test/
@@ -16,8 +15,8 @@ then
     echo "Proton_opt.py test passed."
 else
     echo "Proton_opt.py test failed."
+    fail=1
 fi
-
 
 # Test input_gen.py
 cp scripts/tests/test_dummy_protonopt.out input/test/
@@ -27,6 +26,7 @@ then
     echo "Input_gen.py test passed."
 else
     echo "Input_gen.py test failed."
+    fail=1
 fi
 
 # Test StrainViz.py
@@ -38,9 +38,12 @@ then
     echo "StrainViz.py test passed."
 else
     echo "StrainViz.py test failed."
+    fail=1
 fi
 
 # Teardown
 rm input/test.xyz
 rm -r input/test/
 rm -r output/test/
+
+exit $fail
