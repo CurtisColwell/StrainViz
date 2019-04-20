@@ -45,4 +45,5 @@ cd ../..
 mkdir -p output/$1
 # Calculates the strain and creates .tcl files to be visualized in VMD
 python scripts/StrainViz.py $1
+cp input/$1.xyz output/$1
 echo "[$(date +"%Y-%m-%d %T")] StrainViz analysis finished."

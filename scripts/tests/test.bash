@@ -35,9 +35,9 @@ cp scripts/tests/test_dummy.out input/test/
 python scripts/StrainViz.py test
 if cmp -s output/test/total_force.tcl scripts/tests/answer_total_force.tcl
 then
-    echo "Input_gen.py test passed."
+    echo "StrainViz.py test passed."
 else
-    echo "Input_gen.py test failed."
+    echo "StrainViz.py test failed."
 fi
 
 # Teardown
