@@ -3,15 +3,15 @@ from bond_scripts import *
 import os
 import sys
 
-geometry_filename = 'input/' + sys.argv[1] + ".xyz"
+geometry_filename = sys.argv[1] + ".xyz"
 		
 full_bond_forces = []
 full_angle_forces = []
 full_dihedral_forces = []
 full_key = []
-for file in os.listdir(geometry_filename[:-4]):
+for file in os.listdir("input/" + geometry_filename[:-4]):
     if file.endswith(".out"):
-        bond, angle, dihedral = map_forces(geometry_filename, file)
+        bond, angle, dihedral = map_forces("input/" + geometry_filename, file)
         for line in bond:
             full_bond_forces.append(line)
         for line in angle:
