@@ -2,9 +2,6 @@
 set -e
 
 # Set up
-
-fail=0
-
 cd "$(dirname "$0")"
 cp test.xyz ../../input/
 mkdir ../../input/test/
@@ -20,7 +17,6 @@ else
     echo "Proton_opt.py test failed."
     fail=1
 fi
-
 
 # Test input_gen.py
 cp scripts/tests/test_dummy_protonopt.out input/test/
