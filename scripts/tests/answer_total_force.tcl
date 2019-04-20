@@ -2,7 +2,7 @@
 # Maximum value: 0.0111309099917
 
 # Load a molecule
-mol new input/test.xyz
+mol new test.xyz
 
 # Change bond radii and various resolution parameters
 mol representation cpk 0.8 0.0 30 5
