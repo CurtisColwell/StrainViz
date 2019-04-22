@@ -59,3 +59,16 @@ while replacing "example.tcl" for the .tcl file you would like to visualize:
 source example.tcl
 ```
 
+## Fragment creation
+
+If there is a mistake during the run it is usually due to an error with the way the 
+fragments were made and is reflected as an error in one of the Gaussian output files. 
+Use the terminal output to determine where the calculation went wrong and check the 
+associated output file to troubleshoot. A final note about the fragments is that the 
+coordinates of the atoms that are present in the fragment and base geometry must match 
+exactly or the script will not be able to translate the energy back to the base geometry.
+
+## Using with SLURM
+
+These jobs can be submitted to a SLURM scheduler by creating an .srun file that runs the bash 
+script.
