@@ -23,7 +23,7 @@ def create_protonopts(base, dummy):
 			input_geometry.append(dummy_atom)
 	
 	script = open(os.path.splitext(dummy)[0] + "_protonopt.inp", "w")
-	script.write("#n B3LYP/6-31G(d) opt\n\n")
+	script.write("%NProcShared=" + sys.argv[2] + "\n#n B3LYP/6-31G(d) opt\n\n")
 	script.write(" proton optimization\n\n0 1\n")
 	for atom in input_geometry:
 		for x in atom[1:]:

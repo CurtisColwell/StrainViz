@@ -46,10 +46,12 @@ the input/ folder where example-molecule.xyz is [5]CPP and five fragment .xyz
 files are in the related folder.
 
 4. Run StrainViz to run multiple Gaussian jobs on each fragment and analyze 
-the results. This creates .tcl files for the bond, angle and dihedral strain 
-for each fragment and the combination of the fragments.
+the results. Specify the variable "molecule-name" so that it matches the geometry 
+.xyz file and fragment folder and "processors-for-Gaussian" to be the number of 
+processor for the Gaussian jobs. This script creates .tcl files for the bond, angle 
+and dihedral strain for each fragment and the combination of the fragments.
 ```
-bash StrainViz.bash molecule-name
+bash StrainViz.bash molecule-name processors-for-Gaussian
 ```
 
 5. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
