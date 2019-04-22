@@ -15,7 +15,7 @@ done < <(find . -type f -name "*.xyz" -print0)
 
 cd ../..
 # Create _protonopt.inp files to optimize the proton in Gaussian from the dummy .xyz files
-python scripts/proton_opt.py $1
+python scripts/proton_opt.py $1 ${2:-1}
 echo "[$(date +"%Y-%m-%d %T")] Proton optimization files created."
 
 cd input/$1
@@ -30,7 +30,7 @@ done
 cd ../..
 # Create .inp files to calculate the energy in Gaussian from the _protonopt.out files and 
 # deletes the protonopt files
-python scripts/input_gen.py $1
+python scripts/input_gen.py $1 ${2:-1}
 echo "[$(date +"%Y-%m-%d %T")] Gaussian input files created."
 
 
