@@ -23,7 +23,7 @@ fileend="_protonopt"
 # Run the _protonopt.inp files in Gaussian to get _protonopt.out files
 module load gaussian
 for file in "${INPUT_NAMES[@]}"; do
-    g09 < "$file$fileend.inp" > "$file$fileend.out"
+    g09 < "$file$fileend.inp" > "$file$fileend.out" || echo "[$(date +"%Y-%m-%d %T")] $file proton optimization failed."
     echo "[$(date +"%Y-%m-%d %T")] $file protons optimized."
 done
 
@@ -37,7 +37,7 @@ echo "[$(date +"%Y-%m-%d %T")] Gaussian input files created."
 cd input/$1
 # Run the .inp files in Gaussian to get .out files
 for file in "${INPUT_NAMES[@]}"; do
-    g09 < "$file.inp" > "$file.out"
+    g09 < "$file.inp" > "$file.out" || echo "[$(date +"%Y-%m-%d %T")] $file energy calculation failed."
     echo "[$(date +"%Y-%m-%d %T")] $file Gaussian run successful."
 done
 
