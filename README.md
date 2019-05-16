@@ -41,7 +41,7 @@ Create a directory with the same name.
 that will allow the molecule to release its strain in Avogadro and save them 
 as .xyz files in the directory named after the original molecule. Make sure 
 that when a piece of the molecule is removed, protons are added to the empty 
-bonding sites using "Build -> Add Hydrogens" in Avogadro. For an example, see 
+bonding sites by drawing them at every severed bond. For an example, see 
 the input/ folder where example-molecule.xyz is [5]CPP and five fragment .xyz 
 files are in the related folder.
 
