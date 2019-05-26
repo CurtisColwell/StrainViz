@@ -176,7 +176,7 @@ Writes the script that you can then run in the VMD Tk Console using "source scri
 """
 def vmd_writer(script_name, bond_colors, geometry_filename, min, max, header):
 	script = open('output/' + script_name, "w")
-	script.write("# Minimum value: %s\n# Maximum value: %s\n\n" % (min, max))
+	script.write("# Minimum value: %s\n# Maximum value: %s\n\n" % (min*627.509, max*627.509))
 	script.write("# Load a molecule\nmol new %s\n\n" % (geometry_filename))
 	with open(header) as script_header:
 		for line in script_header:
