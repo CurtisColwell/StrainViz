@@ -64,7 +64,7 @@ source example.tcl
 ## Colour codes
 
 In the .tcl file used to visualize the strain, the first two lines specify the minimum 
-and maximum energy present in the molecule. This value is given in Hartrees. The most 
+and maximum energy present in the molecule. This value is given in kcal/mol. The most 
 red bond has the maximum energy and the most green bond has the minimum energy.
 
 ## Fragment creation
