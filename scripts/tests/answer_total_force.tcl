@@ -1,8 +1,8 @@
-# Minimum value: 0.00018422279553
-# Maximum value: 0.0111309099917
+# Minimum value: 0.137892495513
+# Maximum value: 6.98474619797
 
 # Load a molecule
-mol new test.xyz
+mol new test_dummy.xyz
 
 # Change bond radii and various resolution parameters
 mol representation cpk 0.8 0.0 30 5
@@ -58,105 +58,115 @@ color change rgb  32  1.000000  0.000000  0.000000
 mol addrep top
 mol modstyle 1 top bonds
 mol modcolor 1 top {colorid 4}
-mol modselect 1 top {index 0 13}
+mol modselect 1 top {index 0 1}
 
 mol addrep top
 mol modstyle 2 top bonds
 mol modcolor 2 top {colorid 4}
-mol modselect 2 top {index 0 29}
+mol modselect 2 top {index 0 11}
 
 mol addrep top
 mol modstyle 3 top bonds
-mol modcolor 3 top {colorid 8}
-mol modselect 3 top {index 13 14}
+mol modcolor 3 top {colorid 1}
+mol modselect 3 top {index 0 20}
 
 mol addrep top
 mol modstyle 4 top bonds
-mol modcolor 4 top {colorid 1}
-mol modselect 4 top {index 13 38}
+mol modcolor 4 top {colorid 8}
+mol modselect 4 top {index 1 2}
 
 mol addrep top
 mol modstyle 5 top bonds
-mol modcolor 5 top {colorid 10}
-mol modselect 5 top {index 14 15}
+mol modcolor 5 top {colorid 1}
+mol modselect 5 top {index 1 12}
 
 mol addrep top
 mol modstyle 6 top bonds
-mol modcolor 6 top {colorid 2}
-mol modselect 6 top {index 14 39}
+mol modcolor 6 top {colorid 10}
+mol modselect 6 top {index 2 3}
 
 mol addrep top
 mol modstyle 7 top bonds
-mol modcolor 7 top {colorid 32}
-mol modselect 7 top {index 15 16}
+mol modcolor 7 top {colorid 2}
+mol modselect 7 top {index 2 13}
 
 mol addrep top
 mol modstyle 8 top bonds
-mol modcolor 8 top {colorid 13}
-mol modselect 8 top {index 15 28}
+mol modcolor 8 top {colorid 32}
+mol modselect 8 top {index 3 4}
 
 mol addrep top
 mol modstyle 9 top bonds
 mol modcolor 9 top {colorid 13}
-mol modselect 9 top {index 16 17}
+mol modselect 9 top {index 3 10}
 
 mol addrep top
 mol modstyle 10 top bonds
-mol modcolor 10 top {colorid 10}
-mol modselect 10 top {index 16 27}
+mol modcolor 10 top {colorid 13}
+mol modselect 10 top {index 4 5}
 
 mol addrep top
 mol modstyle 11 top bonds
-mol modcolor 11 top {colorid 9}
-mol modselect 11 top {index 17 18}
+mol modcolor 11 top {colorid 10}
+mol modselect 11 top {index 4 9}
 
 mol addrep top
 mol modstyle 12 top bonds
-mol modcolor 12 top {colorid 3}
-mol modselect 12 top {index 17 40}
+mol modcolor 12 top {colorid 9}
+mol modselect 12 top {index 5 6}
 
 mol addrep top
 mol modstyle 13 top bonds
-mol modcolor 13 top {colorid 5}
-mol modselect 13 top {index 18 19}
+mol modcolor 13 top {colorid 3}
+mol modselect 13 top {index 5 14}
 
 mol addrep top
 mol modstyle 14 top bonds
-mol modcolor 14 top {colorid 1}
-mol modselect 14 top {index 18 41}
+mol modcolor 14 top {colorid 5}
+mol modselect 14 top {index 6 7}
 
 mol addrep top
 mol modstyle 15 top bonds
-mol modcolor 15 top {colorid 4}
-mol modselect 15 top {index 19 26}
+mol modcolor 15 top {colorid 1}
+mol modselect 15 top {index 6 15}
 
 mol addrep top
 mol modstyle 16 top bonds
-mol modcolor 16 top {colorid 8}
-mol modselect 16 top {index 26 27}
+mol modcolor 16 top {colorid 5}
+mol modselect 16 top {index 7 8}
 
 mol addrep top
 mol modstyle 17 top bonds
 mol modcolor 17 top {colorid 1}
-mol modselect 17 top {index 26 46}
+mol modselect 17 top {index 7 21}
 
 mol addrep top
 mol modstyle 18 top bonds
-mol modcolor 18 top {colorid 3}
-mol modselect 18 top {index 27 47}
+mol modcolor 18 top {colorid 8}
+mol modselect 18 top {index 8 9}
 
 mol addrep top
 mol modstyle 19 top bonds
-mol modcolor 19 top {colorid 8}
-mol modselect 19 top {index 28 29}
+mol modcolor 19 top {colorid 1}
+mol modselect 19 top {index 8 16}
 
 mol addrep top
 mol modstyle 20 top bonds
-mol modcolor 20 top {colorid 3}
-mol modselect 20 top {index 28 48}
+mol modcolor 20 top {colorid 2}
+mol modselect 20 top {index 9 17}
 
 mol addrep top
 mol modstyle 21 top bonds
-mol modcolor 21 top {colorid 1}
-mol modselect 21 top {index 29 49}
+mol modcolor 21 top {colorid 8}
+mol modselect 21 top {index 10 11}
+
+mol addrep top
+mol modstyle 22 top bonds
+mol modcolor 22 top {colorid 3}
+mol modselect 22 top {index 10 18}
+
+mol addrep top
+mol modstyle 23 top bonds
+mol modcolor 23 top {colorid 1}
+mol modselect 23 top {index 11 19}
 
