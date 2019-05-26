@@ -1,5 +1,5 @@
-# Minimum value: 0.137892495513
-# Maximum value: 6.98474619797
+# Minimum value: 0.115601462200235
+# Maximum value: 6.98474619798167
 
 # Load a molecule
 mol new test.xyz
