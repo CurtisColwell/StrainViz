@@ -36,9 +36,12 @@ def map_forces(geometry, force_output):
 	angle_forces_vmd, angle_min, angle_max = vmd_norm(compressed_angle_forces)
 	dihedral_forces_vmd, dihedral_min, dihedral_max = vmd_norm(compressed_dihedral_forces)
 	
+	raw_output_writer(geometry[6:-4] + "/bond_" + os.path.splitext(force_output)[0] + ".txt", copy_bond_forces)
 	vmd_writer(geometry[6:-4] + "/bond_" + os.path.splitext(force_output)[0] + ".tcl", bond_forces_vmd, geometry[6:], bond_min, bond_max, "scripts/vmd_header.tcl")
+	raw_output_writer(geometry[6:-4] + "/angle_" + os.path.splitext(force_output)[0] + ".txt", copy_angle_forces)
 	vmd_writer(geometry[6:-4] + "/angle_" + os.path.splitext(force_output)[0] + ".tcl", angle_forces_vmd, geometry[6:], angle_min, angle_max, "scripts/vmd_header.tcl")
-	vmd_writer(geometry[6:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry[6:], dihedral_min, dihedral_max, "scripts/vmd_header.tcl")
+	raw_output_writer(geometry[6:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".txt", copy_dihedral_forces)
+	vmd_writer(geometry[6:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry[6:], dihedral_min, dihedral_max, "scripts/vmd_header.tcl")	
 
 	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
 
@@ -188,6 +191,13 @@ def vmd_writer(script_name, bond_colors, geometry_filename, min, max, header):
 		script.write("mol modcolor %s top {colorid %s}\n" % (index+1,line[0]))
 		script.write("mol modselect %s top {index %s %s}\n\n" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
 
+def raw_output_writer(script_name, forces):
+	output = open('output/' + script_name, "w")
+	for line in forces:
+		for text in line:
+			output.write(str(text) + " ")
+		output.write("\n")
+
 """ Use the format compressed_forces = compress_forces(bond list, angle or dihedral 
 force list)
 Because multiple bonds take part in a single angle or dihedral strain, this sums
@@ -235,11 +245,12 @@ def combine_dummies(forces, geometry, force_type):
 		bond[0] /= x
 	
 	output_forces = copy.deepcopy(new_forces)
-	
+	raw_output_writer(geometry[:-4] + "/" + force_type + "_total.txt", output_forces)
+
 	#Write the forces to a .tcl script
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	vmd_writer(geometry[:-4] + "/" + force_type + "_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "scripts/vmd_header.tcl")
-	
+
 	return output_forces;
 	
 """ This function combines all the dummies into a single picture. Forces is a list with 
@@ -266,5 +277,6 @@ def combine_force_types(forces, geometry):
 				bond[0] += line[0]
 	
 	#Write the forces to a .tcl script
+	raw_output_writer(geometry[:-4] + "/total_force.txt", new_forces)
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	vmd_writer(geometry[:-4] + "/total_force.tcl", new_forces_vmd, geometry, scale_min, scale_max, "scripts/vmd_header.tcl")
