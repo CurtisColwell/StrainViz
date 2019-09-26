@@ -30,8 +30,7 @@ files are deleted after being used.
 ![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/block_diagram.png)
 
 1. Model the strained compound in Avogadro and create a Gaussian 
-input file to optimize the geometry. Use B3LYP/6-31G(d) for your functional and 
-basis set.
+input file to optimize the geometry.
 
 2. Use Gaussian to create an optimized geometry output file. Open this file in 
 Avogadro and save it in the input/ directory with the .xyz file extension. 
@@ -47,11 +46,12 @@ files are in the related folder.
 
 4. Run StrainViz to run multiple Gaussian jobs on each fragment and analyze 
 the results. Specify the variable "molecule-name" so that it matches the geometry 
-.xyz file and fragment folder and "processors-for-Gaussian" to be the number of 
-processor for the Gaussian jobs. This script creates .tcl files for the bond, angle 
+.xyz file and fragment folder, "processors-for-Gaussian" to be the number of 
+processor for the Gaussian jobs, "level-of-theory" as a string that is the level 
+of theory and basis set. This script creates .tcl files for the bond, angle 
 and dihedral strain for each fragment and the combination of the fragments.
 ```
-bash StrainViz.bash molecule-name processors-for-Gaussian
+bash StrainViz.bash molecule-name processors-for-Gaussian level-of-theory
 ```
 
 5. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
