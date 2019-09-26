@@ -9,7 +9,7 @@ cp test_dummy.xyz ../../input/test/
 
 # Test proton_opt.py
 cd ../..
-python scripts/proton_opt.py test 1
+python scripts/proton_opt.py test 1 "B3LYP/6-31G(d)"
 if cmp -s input/test/test_dummy_protonopt.inp scripts/tests/answer_dummy_protonopt.inp
 then
     echo "Proton_opt.py test passed."
@@ -20,7 +20,7 @@ fi
 
 # Test input_gen.py
 cp scripts/tests/test_dummy_protonopt.out input/test/
-python scripts/input_gen.py test 1
+python scripts/input_gen.py test 1 "B3LYP/6-31G(d)"
 if cmp -s input/test/test_dummy.inp scripts/tests/answer_dummy.inp
 then
     echo "Input_gen.py test passed."
