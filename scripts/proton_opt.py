@@ -7,7 +7,7 @@ from scripts import load_geometry
 """ This function uses the base geometry.xyz and dummy.xyz files to create a Gaussian 
 input file to optimize the added protons from dummy creation
 """
-def create_protonopts(base, dummy):
+def create_protonopts(base, dummy, level):
 	base_geometry = load_geometry(base)
 	dummy_geometry = load_geometry(dummy)
 	
@@ -23,7 +23,7 @@ def create_protonopts(base, dummy):
 			input_geometry.append(dummy_atom)
 	
 	script = open(os.path.splitext(dummy)[0] + "_protonopt.inp", "w")
-	script.write("%NProcShared=" + sys.argv[2] + "\n#n B3LYP/6-31G(d) opt\n\n")
+	script.write("%NProcShared=" + sys.argv[2] + "\n#n " + level + " opt\n\n")
 	script.write(" proton optimization\n\n0 1\n")
 	for atom in input_geometry:
 		for x in atom[1:]:
@@ -34,6 +34,7 @@ def create_protonopts(base, dummy):
 # Execution
 
 geometry_filename = "input/" + sys.argv[1] + ".xyz"
+level = sys.argv[3]
 
 fragments = []
 for file in os.listdir(geometry_filename[:-4]):
@@ -41,5 +42,4 @@ for file in os.listdir(geometry_filename[:-4]):
         fragments.append(geometry_filename[:-4] + "/" + file)
 
 for file in fragments:
-    create_protonopts(geometry_filename, file)
-
+    create_protonopts(geometry_filename, file, level)

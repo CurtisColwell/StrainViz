@@ -6,7 +6,7 @@ import sys
 """ This function uses the output from the proton optimization to create a Gaussian input 
 file for the strain calculation
 """
-def create_input(file):
+def create_input(file, level):
 	output_lines = open(file,'r').read().splitlines()
 	
 	read_line = False
@@ -31,7 +31,7 @@ def create_input(file):
 		periodic_table[element.split()[0]] = element.split()[1]
 
 	script = open(file[:-14] + ".inp", "w")
-	script.write("%NProcShared=" + sys.argv[2] + "\n#n B3LYP/6-31G(d) opt\n\n")
+	script.write("%NProcShared=" + sys.argv[2] + "\n#n " + level + " opt\n\n")
 	script.write(" geometry optimization\n\n0 1\n")
 	for atom in coordinates:
 		script.write("%s\t%s\t%s\t%s\t" % (periodic_table[atom[1]], atom[3], atom[4], atom[5]))
@@ -43,6 +43,7 @@ def create_input(file):
 
 # Execution
 
+level = sys.argv[3]
 fragments = []
 fragment_folder = "input/" + sys.argv[1] + "/"
 for file in os.listdir(fragment_folder):
@@ -50,4 +51,4 @@ for file in os.listdir(fragment_folder):
         fragments.append(fragment_folder + file)
 
 for file in fragments:
-    create_input(file)
+    create_input(file, level)
