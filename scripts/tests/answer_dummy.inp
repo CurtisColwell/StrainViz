@@ -1,5 +1,5 @@
 %NProcShared=1
-#n B3LYP/6-31G(d) opt
+#n B3LYP/6-31G(d) opt=rfo
 
  geometry optimization
 
