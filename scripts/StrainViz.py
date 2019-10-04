@@ -9,9 +9,12 @@ full_bond_forces = []
 full_angle_forces = []
 full_dihedral_forces = []
 full_key = []
+fragment_nixlist = []
 for file in os.listdir("input/" + geometry_filename[:-4]):
     if file.endswith(".out"):
         bond, angle, dihedral = map_forces("input/" + geometry_filename, file)
+        if (min(bond) or min(angle) or min(dihedral)) < 0:
+            fragment_nixlist.append(file)
         for line in bond:
             full_bond_forces.append(line)
         for line in angle:
@@ -30,3 +33,6 @@ print_total(total_forces, "Total strain")
 print_total(averaged_bond_forces, "Bond strain")
 print_total(averaged_angle_forces, "Angle strain")
 print_total(averaged_dihedral_forces, "Dihedral strain")
+
+for file in fragment_nixlist:
+    print(file + " resulted in erroneous results.")

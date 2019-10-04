@@ -1,6 +1,6 @@
 # Strain Analysis Visualization
 
-![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/StrainViz.png)
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png)
 
 ## About
 
@@ -29,7 +29,7 @@ All manual steps are shown in green, all automated steps are shown in
 red, and all intermediate files are shown in blue. The proton optimization 
 files are deleted after being used.
 
-![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/block_diagram.png)
+![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/block_diagram.png)
 
 1. Model the strained compound in Avogadro and create a Gaussian 
 input file to optimize the geometry.
@@ -68,6 +68,8 @@ source example.tcl
 In the .tcl file used to visualize the strain, the first two lines specify the minimum 
 and maximum energy present in the molecule. This value is given in kcal/mol. The most 
 red bond has the maximum energy and the most green bond has the minimum energy.
+
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/example_colour_scale.png)
 
 ## Fragment creation
 
