@@ -12,7 +12,10 @@ The strain analysis uses the optimization of destrained fragments of the
 molecule to construct a picture of the strain energy mapped onto the bonds. 
 
 [VMD](https://www.ks.uiuc.edu/Research/vmd/) is used to visualize the 
-strain. All the scripts used to do this are written in Python and Bash. 
+strain. All the scripts used to do this are written in Python and Bash.
+
+This tool was written by Curtis Colwell in the [Jasti Group](https://pages.uoregon.edu/jastilab/) 
+at the University of Oregon.
 
 ## Installation
 

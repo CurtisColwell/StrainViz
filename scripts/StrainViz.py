@@ -13,8 +13,11 @@ fragment_nixlist = []
 for file in os.listdir("input/" + geometry_filename[:-4]):
     if file.endswith(".out"):
         bond, angle, dihedral = map_forces("input/" + geometry_filename, file)
-        if (min(bond) or min(angle) or min(dihedral)) < 0:
-            fragment_nixlist.append(file)
+        for energy in (bond+angle+dihedral):
+            if energy[0] < 0:
+                fragment_nixlist.append(file)
+                print("yep")
+                break
         for line in bond:
             full_bond_forces.append(line)
         for line in angle:
