@@ -6,16 +6,16 @@ def get_atom_coords(output_lines):
 	read_line = False
 	atom_coords_raw = []
 	for line in output_lines:
-		if 'GradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGradGrad' in line and read_line == True:
+		if len(line.split()) == 0 and read_line == True:
+			atom_coords_raw.append(line.split())
 			break
 		if ' Symbolic Z-matrix:' in line:
 			read_line = True
 			continue
 		if read_line == True:
 			atom_coords_raw.append(line.split())
-	atom_coords_raw.pop()
-	atom_coords_raw.pop()
 	atom_coords_raw.pop(0)
+	atom_coords_raw.pop()
 	
 	atom_coords = []
 	for x, line in enumerate(atom_coords_raw):
