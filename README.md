@@ -1,5 +1,7 @@
 # Strain Analysis Visualization
 
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/StrainViz.png)
+
 ## About
 
 This is a tool to analyze the strain of inherently strained molecules. 
