@@ -27,6 +27,8 @@ def create_protonopts(base, dummy, level):
 	script.write(" proton optimization\n\n0 1\n")
 	for atom in input_geometry:
 		for x in atom[1:]:
+			if isinstance(x, float):
+				x = '%f' % x
 			script.write("%s\t" % x)
 		script.write("\n")
 	script.write("\n")
