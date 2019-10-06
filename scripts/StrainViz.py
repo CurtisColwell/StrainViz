@@ -16,7 +16,7 @@ for file in os.listdir("input/" + geometry_filename[:-4]):
         for energy in (bond+angle+dihedral):
             if energy[0] < 0:
                 fragment_nixlist.append(file)
-                print("yep")
+                print(file + " resulted in negative energies.")
                 break
         for line in bond:
             full_bond_forces.append(line)
@@ -36,6 +36,3 @@ print_total(total_forces, "Total strain")
 print_total(averaged_bond_forces, "Bond strain")
 print_total(averaged_angle_forces, "Angle strain")
 print_total(averaged_dihedral_forces, "Dihedral strain")
-
-for file in fragment_nixlist:
-    print(file + " resulted in erroneous results.")
