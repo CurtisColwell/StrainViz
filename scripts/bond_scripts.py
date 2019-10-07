@@ -121,6 +121,8 @@ def force_parse(file):
 			angle_forces.append(line)
 		if len(line[1]) == 4:
 			dihedral_forces.append(line)
+		if len(line[1]) == 5:
+			angle_forces.append([line[0],line[1][:2]])
 	
 	#Get atom coordinates
 	atom_coords = get_atom_coords(output_lines)

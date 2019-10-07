@@ -1,18 +1,19 @@
 # Strain Analysis Visualization
 
-![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/StrainViz.png)
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png)
 
 ## About
 
 This is a tool to analyze the strain of inherently strained molecules. 
 [Gaussian](http://gaussian.com/glossary/g09/) is used to calculate the 
-optimized geometry and strain of the molecule. 
+optimized geometry and strain of the molecule. The strain analysis uses 
+the optimization of destrained fragments of the molecule to construct a 
+picture of the strain energy mapped onto the bonds. [VMD](https://www.ks.uiuc.edu/Research/vmd/) 
+is used to visualize the strain. All the scripts used to do this are 
+written in Python and Bash.
 
-The strain analysis uses the optimization of destrained fragments of the 
-molecule to construct a picture of the strain energy mapped onto the bonds. 
-
-[VMD](https://www.ks.uiuc.edu/Research/vmd/) is used to visualize the 
-strain. All the scripts used to do this are written in Python and Bash. 
+This tool was written by [Curtis Colwell](https://github.com/CurtisColwell) 
+in the [Jasti Group](https://pages.uoregon.edu/jastilab/) at the University of Oregon.
 
 ## Installation
 
@@ -29,7 +30,7 @@ All manual steps are shown in green, all automated steps are shown in
 red, and all intermediate files are shown in blue. The proton optimization 
 files are deleted after being used.
 
-![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/block_diagram.png)
+![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/block_diagram.png)
 
 1. Model the strained compound in Avogadro and create a Gaussian 
 input file to optimize the geometry.
@@ -68,6 +69,8 @@ source example.tcl
 In the .tcl file used to visualize the strain, the first two lines specify the minimum 
 and maximum energy present in the molecule. This value is given in kcal/mol. The most 
 red bond has the maximum energy and the most green bond has the minimum energy.
+
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/example_colour_scale.png)
 
 ## Fragment creation
 
