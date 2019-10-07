@@ -1,6 +1,7 @@
 # Strain Analysis Visualization
 
 ![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png =250x)
+<img src="https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png" alt="StrainViz Logo" width="250">
 
 ## About
 
