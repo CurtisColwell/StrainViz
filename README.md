@@ -6,16 +6,14 @@
 
 This is a tool to analyze the strain of inherently strained molecules. 
 [Gaussian](http://gaussian.com/glossary/g09/) is used to calculate the 
-optimized geometry and strain of the molecule. 
+optimized geometry and strain of the molecule. The strain analysis uses 
+the optimization of destrained fragments of the molecule to construct a 
+picture of the strain energy mapped onto the bonds. [VMD](https://www.ks.uiuc.edu/Research/vmd/) 
+is used to visualize the strain. All the scripts used to do this are 
+written in Python and Bash.
 
-The strain analysis uses the optimization of destrained fragments of the 
-molecule to construct a picture of the strain energy mapped onto the bonds. 
-
-[VMD](https://www.ks.uiuc.edu/Research/vmd/) is used to visualize the 
-strain. All the scripts used to do this are written in Python and Bash.
-
-This tool was written by Curtis Colwell in the [Jasti Group](https://pages.uoregon.edu/jastilab/) 
-at the University of Oregon.
+This tool was written by [Curtis Colwell](https://github.com/CurtisColwell) 
+in the [Jasti Group](https://pages.uoregon.edu/jastilab/) at the University of Oregon.
 
 ## Installation
 
