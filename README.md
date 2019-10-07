@@ -1,6 +1,6 @@
 # Strain Analysis Visualization
 
-![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png)
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png =250x)
 
 ## About
 
@@ -70,7 +70,7 @@ In the .tcl file used to visualize the strain, the first two lines specify the m
 and maximum energy present in the molecule. This value is given in kcal/mol. The most 
 red bond has the maximum energy and the most green bond has the minimum energy.
 
-![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/example_colour_scale.png)
+![StrainViz Logo](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/example_colour_scale.png =250x)
 
 ## Fragment creation
 
