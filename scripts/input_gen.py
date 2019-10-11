@@ -31,7 +31,7 @@ def create_input(file, level):
 		periodic_table[element.split()[0]] = element.split()[1]
 
 	script = open(file[:-14] + ".inp", "w")
-	script.write("%Mem=128GB\n%NProcShared=" + sys.argv[2] + "\n#n " + level + " opt=rfo\n\n")
+	script.write("%Mem=64GB\n%NProcShared=" + sys.argv[2] + "\n#n " + level + " opt=rfo\n\n")
 	script.write(" geometry optimization\n\n0 1\n")
 	for atom in coordinates:
 		script.write("%s\t%s\t%s\t%s\t" % (periodic_table[atom[1]], atom[3], atom[4], atom[5]))
