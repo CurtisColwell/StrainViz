@@ -41,7 +41,7 @@ def get_connectivity_data(output_lines):
 	
 	connectivity_data = []
 	for line in raw_connectivity_data[1:-1]:
-		connectivity_data.append(line[2].strip("RAD()").split(","))
+		connectivity_data.append(line[2].strip("RADL()").split(","))
 	
 	return connectivity_data;
 

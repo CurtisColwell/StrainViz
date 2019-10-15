@@ -9,9 +9,15 @@ full_bond_forces = []
 full_angle_forces = []
 full_dihedral_forces = []
 full_key = []
+fragment_nixlist = []
 for file in os.listdir("input/" + geometry_filename[:-4]):
     if file.endswith(".out"):
         bond, angle, dihedral = map_forces("input/" + geometry_filename, file)
+        for energy in (bond+angle+dihedral):
+            if energy[0] < 0:
+                fragment_nixlist.append(file)
+                print(file + " resulted in negative energies.")
+                break
         for line in bond:
             full_bond_forces.append(line)
         for line in angle:
