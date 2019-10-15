@@ -96,7 +96,10 @@ def force_parse(file):
 	#Create scaling factor for each energy step
 	scale_factor = []
 	for index, energy in enumerate(step_energy_change[:len(pred_step_energy_change)]):
-		scale_factor.append(-energy/pred_step_energy_change[index])
+		if pred_step_energy_change[index] == 0:
+			scale_factor.append(0)
+		else:
+			scale_factor.append(-energy/pred_step_energy_change[index])
 
 	#Get connectivity data
 	connectivity_data = get_connectivity_data(output_lines)
