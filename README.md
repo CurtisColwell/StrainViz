@@ -88,3 +88,7 @@ the molecule to submit.
 ```
 bash slurm.bash input/example-molecule
 ```
+In slurm.bash, the partition defaults to short, but can be changed by editing the file. In 
+slurm_submit.srun, the number of processors defaults to 28, but can be changed by changing 
+the number in the header AND in the bash command. The level of theory can be changed in the 
+bash command as well.

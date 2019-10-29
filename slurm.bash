@@ -5,4 +5,4 @@ set -e
 inputname=$(basename -- "$1")
 inputname="${inputname%.*}"
 
-sbatch --job-name=$inputname --output="output/"$inputname".txt" --account=$GROUP_NAME "slurm_submit.srun"
+sbatch --job-name=$inputname --partition=short --output="output/"$inputname".txt" --account=$GROUP_NAME "slurm_submit.srun"
