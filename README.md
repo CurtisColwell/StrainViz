@@ -83,5 +83,12 @@ exactly or the script will not be able to translate the energy back to the base 
 
 ## Using with SLURM
 
-These jobs can be submitted to a SLURM scheduler by creating an .srun file that runs the bash 
-script.
+These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
+the molecule to submit.
+```
+bash slurm.bash input/example-molecule
+```
+In slurm.bash, the partition defaults to short, but can be changed by editing the file. In 
+slurm_submit.srun, the number of processors defaults to 28, but can be changed by changing 
+the number in the header AND in the bash command. The level of theory can be changed in the 
+bash command as well.
