@@ -83,5 +83,8 @@ exactly or the script will not be able to translate the energy back to the base 
 
 ## Using with SLURM
 
-These jobs can be submitted to a SLURM scheduler by creating an .srun file that runs the bash 
-script.
+These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
+the molecule to submit.
+```
+bash slurm.bash input/example-molecule
+```
