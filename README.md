@@ -89,18 +89,18 @@ of the strain, the script Recalc.bash can be used. This script uses the input fo
 bash Recalc.bash input/example molecule
 ```
 
-##Result Quality
+## Result Quality
 
 If the optimizations are not working ideally, there are a few flags that will appear. 
 
-###Gaussian Job Failure
+### Gaussian Job Failure
 If a Gaussian job fails, a note will appear saying which input file generated the failure.
-###Negative Strain Energy
+### Negative Strain Energy
 If negative strain energies are calculated, a flag will appear saying which output file was 
 analyzed to determine negative strain energies. Negative strain energies can be a hallmark
 of a failed calculation, but if they are close to zero, may be real and part of the calculation 
 as long as they do not result in an overall negative strain.
-###Increase in Energy During Optimization
+### Increase in Energy During Optimization
 If at any point in a fragment geometry optimization a step that increases the energy is taken, 
 a flag will appear noting it. Steep increases in energy as well as trailing optimizations with 
 many small increases in energy often result in bizarre results. Resubmitting these jobs with the 
