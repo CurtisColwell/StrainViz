@@ -84,6 +84,11 @@ def force_parse(file):
 	step_energy_change = []
 	for index, energy in enumerate(step_energy[:-1]):
 		step_energy_change.append(step_energy[index+1]-step_energy[index])
+
+	#Check for increase in step energy
+	for line in step_energy_change:
+		if line > 0:
+			print("Positive enegy change in "+file)
 			
 	#Get predicted change in energy for the step
 	pred_step_energy_change = []
