@@ -7,14 +7,14 @@ the output files and writing .tcl scripts to by viewed in VMD
 def map_forces(geometry, force_output):
 	#Parse file for values
 	atoms, bond_forces, angle_forces, dihedral_forces = force_parse(geometry[:-4] + "/" + force_output)
-	
+
 	bond_atoms = []
 	for line in bond_forces:
 		bond_atoms.append(bond_forces[1])
 	
 	#Use the base geometry and unoptimized dummy geometry to create a key
 	key = create_key(load_geometry(geometry), load_geometry(geometry[:-4] + "/" + os.path.splitext(force_output)[0] + ".xyz"), bond_atoms)
-				
+	
 	mapped_bond_forces = translate_forces(bond_forces, key)
 	mapped_angle_forces = translate_forces(angle_forces, key)
 	mapped_dihedral_forces = translate_forces(dihedral_forces, key)
@@ -84,6 +84,11 @@ def force_parse(file):
 	step_energy_change = []
 	for index, energy in enumerate(step_energy[:-1]):
 		step_energy_change.append(step_energy[index+1]-step_energy[index])
+
+	#Check for increase in step energy
+	for line in step_energy_change:
+		if line > 0:
+			print("Positive enegy change in "+file)
 			
 	#Get predicted change in energy for the step
 	pred_step_energy_change = []
@@ -96,7 +101,10 @@ def force_parse(file):
 	#Create scaling factor for each energy step
 	scale_factor = []
 	for index, energy in enumerate(step_energy_change[:len(pred_step_energy_change)]):
-		scale_factor.append(-energy/pred_step_energy_change[index])
+		if pred_step_energy_change[index] == 0:
+			scale_factor.append(0)
+		else:
+			scale_factor.append(-energy/pred_step_energy_change[index])
 
 	#Get connectivity data
 	connectivity_data = get_connectivity_data(output_lines)

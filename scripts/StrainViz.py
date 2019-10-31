@@ -5,6 +5,7 @@ import sys
 
 geometry_filename = sys.argv[1] + ".xyz"
 		
+full_atoms = []
 full_bond_forces = []
 full_angle_forces = []
 full_dihedral_forces = []
@@ -24,10 +25,21 @@ for file in os.listdir("input/" + geometry_filename[:-4]):
             full_angle_forces.append(line)
         for line in dihedral:
             full_dihedral_forces.append(line)
+    if file.endswith(".xyz"):
+        for line in load_geometry("input/" + geometry_filename[:-4] + "/" + file):
+            full_atoms.append(line[1:])
 
 averaged_bond_forces = combine_dummies(full_bond_forces, geometry_filename, "bond")
 averaged_angle_forces = combine_dummies(full_angle_forces, geometry_filename, "angle")
 averaged_dihedral_forces = combine_dummies(full_dihedral_forces, geometry_filename, "dihedral")
+
+missing_atoms = False
+for line in load_geometry("input/" + geometry_filename):
+    if line[1:] not in full_atoms:
+        missing_atoms = True
+
+if missing_atoms == True:
+    print("Base molecule not fully covered. Make more fragments.")
 
 total_forces = averaged_bond_forces + averaged_angle_forces + averaged_dihedral_forces
 combine_force_types(total_forces, geometry_filename)

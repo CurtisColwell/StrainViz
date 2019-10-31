@@ -83,20 +83,35 @@ exactly or the script will not be able to translate the energy back to the base 
 
 ## Resubmitting
 
-If the Gaussian jobs have already been run and it is needed only to resubmit the calculation 
+If the Gaussian jobs have already been run and it is only needed to resubmit the calculation 
 of the strain, the script Recalc.bash can be used. This script uses the input format:
 ```
 bash Recalc.bash input/example molecule
 ```
+
+## Result Quality
+
+If the optimizations are not working ideally, there are a few flags that will appear. 
+
+### Gaussian Job Failure
+If a Gaussian job fails, a note will appear saying which input file generated the failure.
+### Negative Strain Energy
+If negative strain energies are calculated, a flag will appear saying which output file was 
+analyzed to determine negative strain energies. Negative strain energies can be a hallmark
+of a failed calculation, but if they are close to zero, may be real and part of the calculation 
+as long as they do not result in an overall negative strain.
+### Increase in Energy During Optimization
+If at any point in a fragment geometry optimization a step that increases the energy is taken, 
+a flag will appear noting it. Steep increases in energy as well as trailing optimizations with 
+many small increases in energy often result in bizarre results. Resubmitting these jobs with the 
+keyword opt=CalcAll will result in a more computationally intensive, but cleaner trajectory.
 
 ## Using with SLURM
 
 These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
 the molecule to submit.
 ```
-bash slurm.bash input/example-molecule
+bash slurm.bash input/example-molecule level-of-theory partition processors
 ```
-In slurm.bash, the partition defaults to short, but can be changed by editing the file. In 
-slurm_submit.srun, the number of processors defaults to 28, but can be changed by changing 
-the number in the header AND in the bash command. The level of theory can be changed in the 
-bash command as well.
+The level of theory defaults to "M062X/6-31G(d)", the partition defaults to short, and the 
+number of processors defaults to 28 if nothing is written in the command.

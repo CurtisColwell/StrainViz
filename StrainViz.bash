@@ -38,7 +38,7 @@ cd input/$1
 # Run the .inp files in Gaussian to get .out files
 for file in "${INPUT_NAMES[@]}"; do
     g09 < "$file.inp" > "$file.out" || echo "[$(date +"%Y-%m-%d %T")] $file energy calculation failed."
-    echo "[$(date +"%Y-%m-%d %T")] $file Gaussian run successful."
+    echo "[$(date +"%Y-%m-%d %T")] $file Gaussian run done."
 done
 
 cd ../..
