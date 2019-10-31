@@ -21,7 +21,7 @@ def get_atom_coords(output_lines):
 	for x, line in enumerate(atom_coords_raw):
 		atom_coords.append([x+1, line[0], float(line[1]), float(line[2]), float(line[3])])
 		
-	return atom_coords;
+	return atom_coords
 	
 """ Get connectivity data from a list of the output lines as a list of lists containing two 
 connected atoms
@@ -30,7 +30,7 @@ def get_connectivity_data(output_lines):
 	read_line = False
 	raw_connectivity_data = []
 	
-	for index, line in enumerate(output_lines):
+	for line in output_lines:
 		if 'Trust Radius' in line and read_line == True:
 			break
 		if '! Name  Definition              Value          Derivative Info.                !' in line:
@@ -43,7 +43,7 @@ def get_connectivity_data(output_lines):
 	for line in raw_connectivity_data[1:-1]:
 		connectivity_data.append(line[2].strip("RADL()").split(","))
 	
-	return connectivity_data;
+	return connectivity_data
 
 """ Load geometry atoms from .xyz file into a list of lists containing the number, 
 atom type, and x, y, and z coordinates
@@ -57,7 +57,7 @@ def load_geometry(geometry):
 		a = line.split()
 		atom_list.append([x+1, a[0], float(a[1]), float(a[2]), float(a[3])])
 		
-	return atom_list;
+	return atom_list
 
 """ Create a key to correlate dummy atoms to base geometry atoms
 Outputs a list of lists where the first number is dummy atom, second number is base geometry atom
@@ -91,7 +91,7 @@ def create_key(base_atoms, dummy_atoms, bond_atoms):
 		if line[0] not in peripheral_atoms:
 			trimmed_key.append(line)
 			
-	return trimmed_key;
+	return trimmed_key
 
 """ This sums the energies for each bond in the molecule and prints a total energy in kcal/mol
 """

@@ -6,7 +6,7 @@ the output files and writing .tcl scripts to by viewed in VMD
 """
 def map_forces(geometry, force_output):
 	#Parse file for values
-	atoms, bond_forces, angle_forces, dihedral_forces = force_parse(geometry[:-4] + "/" + force_output)
+	bond_forces, angle_forces, dihedral_forces = force_parse(geometry[:-4] + "/" + force_output)
 
 	bond_atoms = []
 	for line in bond_forces:
@@ -43,7 +43,7 @@ def map_forces(geometry, force_output):
 	raw_output_writer(geometry[6:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".txt", copy_dihedral_forces)
 	vmd_writer(geometry[6:-4] + "/dihedral_" + os.path.splitext(force_output)[0] + ".tcl", dihedral_forces_vmd, geometry[6:], dihedral_min, dihedral_max, "scripts/vmd_header.tcl")	
 
-	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces;
+	return copy_bond_forces, copy_angle_forces, copy_dihedral_forces
 
 """ Use the format atoms, bond_forces, angle_forces, dihedral_forces = force_parse("outputfile.out") 
 when calling this function. Returns lists of bond, angle, and dihedral forces.
@@ -132,11 +132,8 @@ def force_parse(file):
 		if len(line[1]) == 5:
 			angle_forces.append([line[0],line[1][:2]])
 	
-	#Get atom coordinates
-	atom_coords = get_atom_coords(output_lines)
-	
 	#Return the bond, angle, and dihedral forces as lists
-	return atom_coords, bond_forces, angle_forces, dihedral_forces;
+	return bond_forces, angle_forces, dihedral_forces
 
 """ Takes the forces and translates the atom numbers to correspond to the base geometry.
 """
@@ -154,7 +151,7 @@ def translate_forces(forces, key):
 		if len(line[1]) == len(forces[0][1]):
 			new_forces.append(line)
 
-	return new_forces;
+	return new_forces
 
 """ Use the format norm_forces = normalize(forces) when calling this function.
 Returns a force matrix that is normalized between 1 and 32 for VMD colours.
@@ -181,7 +178,7 @@ def vmd_norm(force_values):
 	for i in range(len(norm_force_values)):
 		norm_force_values[i][0] = norm_values[i]
 		
-	return norm_force_values, minimum, maximum;
+	return norm_force_values, minimum, maximum
 
 """ Use the format vmd_writer("name of output.tcl", "list of normalized forces 
 and the bonds they belong to", "name of geometry.xyz")
@@ -226,7 +223,7 @@ def compress_forces(bonds, forces):
 		for x in force_list:
 			if bond[1] == x[1]:
 				bond[0] += x[0]
-	return forces_compressed;
+	return forces_compressed
 
 """ This function combines all the dummies into a single picture. Forces is a list with 
 the format forces[0] = [force, [c1, c2]]"""
@@ -261,7 +258,7 @@ def combine_dummies(forces, geometry, force_type):
 	new_forces_vmd, scale_min, scale_max = vmd_norm(new_forces)
 	vmd_writer(geometry[:-4] + "/" + force_type + "_total.tcl", new_forces_vmd, geometry, scale_min, scale_max, "scripts/vmd_header.tcl")
 
-	return output_forces;
+	return output_forces
 	
 """ This function combines all the dummies into a single picture. Forces is a list with 
 the format forces[0] = [force, [c1, c2]]"""
