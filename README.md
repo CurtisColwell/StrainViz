@@ -83,7 +83,7 @@ exactly or the script will not be able to translate the energy back to the base 
 
 ## Resubmitting
 
-If the Gaussian jobs have already been run and it is needed only to resubmit the calculation 
+If the Gaussian jobs have already been run and it is only needed to resubmit the calculation 
 of the strain, the script Recalc.bash can be used. This script uses the input format:
 ```
 bash Recalc.bash input/example molecule
@@ -94,9 +94,7 @@ bash Recalc.bash input/example molecule
 These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
 the molecule to submit.
 ```
-bash slurm.bash input/example-molecule
+bash slurm.bash input/example-molecule level-of-theory partition processors
 ```
-In slurm.bash, the partition defaults to short, but can be changed by editing the file. In 
-slurm_submit.srun, the number of processors defaults to 28, but can be changed by changing 
-the number in the header AND in the bash command. The level of theory can be changed in the 
-bash command as well.
+The level of theory defaults to "M062X/6-31G(d)", the partition defaults to short, and the 
+number of processors defaults to 28 if nothing is written in the command.

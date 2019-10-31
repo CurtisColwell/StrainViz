@@ -1,7 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH -n 28
 
 set -e
 
-bash StrainViz.bash ${SLURM_JOB_NAME} 28 "M062X/6-31G(d)"
+bash StrainViz.bash ${SLURM_JOB_NAME} ${SLURM_NTASKS} $theory
