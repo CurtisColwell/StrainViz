@@ -81,6 +81,14 @@ associated output file to troubleshoot. A final note about the fragments is that
 coordinates of the atoms that are present in the fragment and base geometry must match 
 exactly or the script will not be able to translate the energy back to the base geometry.
 
+## Resubmitting
+
+If the Gaussian jobs have already been run and it is needed only to resubmit the calculation 
+of the strain, the script Recalc.bash can be used. This script uses the input format:
+```
+bash Recalc.bash input/example molecule
+```
+
 ## Using with SLURM
 
 These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
