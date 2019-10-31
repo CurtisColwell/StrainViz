@@ -1,0 +1,6 @@
+#!/bin/bash
+#SBATCH -N 1
+
+set -e
+
+bash StrainViz.bash ${SLURM_JOB_NAME} ${SLURM_NTASKS} $theory

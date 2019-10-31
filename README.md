@@ -81,7 +81,37 @@ associated output file to troubleshoot. A final note about the fragments is that
 coordinates of the atoms that are present in the fragment and base geometry must match 
 exactly or the script will not be able to translate the energy back to the base geometry.
 
+## Resubmitting
+
+If the Gaussian jobs have already been run and it is only needed to resubmit the calculation 
+of the strain, the script Recalc.bash can be used. This script uses the input format:
+```
+bash Recalc.bash input/example molecule
+```
+
+## Result Quality
+
+If the optimizations are not working ideally, there are a few flags that will appear. 
+
+### Gaussian Job Failure
+If a Gaussian job fails, a note will appear saying which input file generated the failure.
+### Negative Strain Energy
+If negative strain energies are calculated, a flag will appear saying which output file was 
+analyzed to determine negative strain energies. Negative strain energies can be a hallmark
+of a failed calculation, but if they are close to zero, may be real and part of the calculation 
+as long as they do not result in an overall negative strain.
+### Increase in Energy During Optimization
+If at any point in a fragment geometry optimization a step that increases the energy is taken, 
+a flag will appear noting it. Steep increases in energy as well as trailing optimizations with 
+many small increases in energy often result in bizarre results. Resubmitting these jobs with the 
+keyword opt=CalcAll will result in a more computationally intensive, but cleaner trajectory.
+
 ## Using with SLURM
 
-These jobs can be submitted to a SLURM scheduler by creating an .srun file that runs the bash 
-script.
+These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
+the molecule to submit.
+```
+bash slurm.bash input/example-molecule level-of-theory partition processors
+```
+The level of theory defaults to "M062X/6-31G(d)", the partition defaults to short, and the 
+number of processors defaults to 28 if nothing is written in the command.
