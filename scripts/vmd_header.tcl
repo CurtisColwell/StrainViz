@@ -5,6 +5,7 @@ mol representation bonds 0.2 30
 # Change the drawing method of the first graphical representation to CPK
 mol modstyle 0 top cpk
 axes location off
+display cuedensity 0.25
 # Color only H atoms white
 mol modselect 0 top {name H}
 # Change the color of the graphical representation 0 to white
