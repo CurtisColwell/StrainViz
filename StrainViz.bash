@@ -14,31 +14,30 @@ while IFS=  read -r -d $'\0'; do
 done < <(find . -type f -name "*.xyz" -print0)
 
 cd ../..
-# Create _protonopt.inp files to optimize the proton in Gaussian from the dummy .xyz files
-python scripts/proton_opt.py $1 $2 $3
+# Create _protonopt.inp files to optimize the proton in Orca from the dummy .xyz files
+python scripts/proton_opt.py $1 $2 $3 $4
 echo "[$(date +"%Y-%m-%d %T")] Proton optimization files created."
 
 cd input/$1
 fileend="_protonopt"
-# Run the _protonopt.inp files in Gaussian to get _protonopt.out files
-module load gaussian
+# Run the _protonopt.inp files in Orca to get _protonopt.out files
+module load orca
 for file in "${INPUT_NAMES[@]}"; do
-    g09 < "$file$fileend.inp" > "$file$fileend.out" || echo "[$(date +"%Y-%m-%d %T")] $file proton optimization failed."
-    echo "[$(date +"%Y-%m-%d %T")] $file protons optimized."
+    $(command -v orca) "$file$fileend.inp" > "$file$fileend.out" || echo "[$(date +"%Y-%m-%d %T")] $file proton optimization failed."
+    echo "[$(date +"%Y-%m-%d %T")] $file proton optimization done."
 done
 
 cd ../..
-# Create .inp files to calculate the energy in Gaussian from the _protonopt.out files and 
+# Create .inp files to calculate the energy in Orca from the _protonopt.out files and 
 # deletes the protonopt files
-python scripts/input_gen.py $1 $2 $3
-echo "[$(date +"%Y-%m-%d %T")] Gaussian input files created."
-
+python scripts/input_gen.py $1 $2 $3 $4
+echo "[$(date +"%Y-%m-%d %T")] Orca input files created."
 
 cd input/$1
-# Run the .inp files in Gaussian to get .out files
+# Run the .inp files in Orca to get .out files
 for file in "${INPUT_NAMES[@]}"; do
-    g09 < "$file.inp" > "$file.out" || echo "[$(date +"%Y-%m-%d %T")] $file energy calculation failed."
-    echo "[$(date +"%Y-%m-%d %T")] $file Gaussian run done."
+    $(command -v orca) "$file.inp" > "$file.out" || echo "[$(date +"%Y-%m-%d %T")] $file energy calculation failed."
+    echo "[$(date +"%Y-%m-%d %T")] $file Orca run done."
 done
 
 cd ../..
