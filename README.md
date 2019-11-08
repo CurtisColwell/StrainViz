@@ -5,7 +5,7 @@
 ## About
 
 This is a tool to analyze the strain of inherently strained molecules. 
-[Gaussian](http://gaussian.com/glossary/g09/) is used to calculate the 
+[Orca](https://orcaforum.kofo.mpg.de/app.php/portal) is used to calculate the 
 optimized geometry and strain of the molecule. The strain analysis uses 
 the optimization of destrained fragments of the molecule to construct a 
 picture of the strain energy mapped onto the bonds. [VMD](https://www.ks.uiuc.edu/Research/vmd/) 
@@ -32,10 +32,10 @@ files are deleted after being used.
 
 ![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/block_diagram.png)
 
-1. Model the strained compound in Avogadro and create a Gaussian 
+1. Model the strained compound in Avogadro and create an Orca
 input file to optimize the geometry.
 
-2. Use Gaussian to create an optimized geometry output file. Open this file in 
+2. Use Orca to create an optimized geometry output file. Open this file in 
 Avogadro and save it in the input/ directory with the .xyz file extension. 
 Create a directory with the same name.
 
@@ -47,14 +47,14 @@ bonding sites by drawing them at every severed bond. For an example, see
 the input/ folder where example-molecule.xyz is [5]CPP and five fragment .xyz 
 files are in the related folder.
 
-4. Run StrainViz to run multiple Gaussian jobs on each fragment and analyze 
+4. Run StrainViz to run multiple Orca jobs on each fragment and analyze 
 the results. Specify the variable "molecule-name" so that it matches the geometry 
-.xyz file and fragment folder, "processors-for-Gaussian" to be the number of 
-processor for the Gaussian jobs, "level-of-theory" as a string that is the level 
-of theory and basis set. This script creates .tcl files for the bond, angle 
+.xyz file and fragment folder, "processors" to be the number of 
+processor for the Orca jobs, "functional" as a string that is the functional and 
+"basis" is a string that is the basis set. This script creates .tcl files for the bond, angle 
 and dihedral strain for each fragment and the combination of the fragments.
 ```
-bash StrainViz.bash molecule-name processors-for-Gaussian level-of-theory
+bash StrainViz.bash molecule-name processors functional basis
 ```
 
 5. In VMD, open the "Tk Console" found under "Extensions", navigate to the 
@@ -75,7 +75,7 @@ red bond has the maximum energy and the most green bond has the minimum energy.
 ## Fragment creation
 
 If there is a mistake during the run it is usually due to an error with the way the 
-fragments were made and is reflected as an error in one of the Gaussian output files. 
+fragments were made and is reflected as an error in one of the Orca output files. 
 Use the terminal output to determine where the calculation went wrong and check the 
 associated output file to troubleshoot. A final note about the fragments is that the 
 coordinates of the atoms that are present in the fragment and base geometry must match 
@@ -83,7 +83,7 @@ exactly or the script will not be able to translate the energy back to the base 
 
 ## Resubmitting
 
-If the Gaussian jobs have already been run and it is only needed to resubmit the calculation 
+If the Orca jobs have already been run and it is only needed to resubmit the calculation 
 of the strain, the script Recalc.bash can be used. This script uses the input format:
 ```
 bash Recalc.bash input/example molecule
@@ -93,8 +93,8 @@ bash Recalc.bash input/example molecule
 
 If the optimizations are not working ideally, there are a few flags that will appear. 
 
-### Gaussian Job Failure
-If a Gaussian job fails, a note will appear saying which input file generated the failure.
+### Orca Job Failure
+If a Orca job fails, a note will appear saying which input file generated the failure.
 ### Negative Strain Energy
 If negative strain energies are calculated, a flag will appear saying which output file was 
 analyzed to determine negative strain energies. Negative strain energies can be a hallmark
@@ -111,7 +111,7 @@ keyword opt=CalcAll will result in a more computationally intensive, but cleaner
 These jobs can be submitted to a SLURM scheduler by running slurm.bash with the name of 
 the molecule to submit.
 ```
-bash slurm.bash input/example-molecule level-of-theory partition processors
+bash slurm.bash input/example-molecule functional basis partition processors
 ```
-The level of theory defaults to "M062X/6-31G(d)", the partition defaults to short, and the 
+The functional defaults to "M062X", the basis to "6-31G**", the partition defaults to short, and the 
 number of processors defaults to 28 if nothing is written in the command.
