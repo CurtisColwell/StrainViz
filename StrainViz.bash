@@ -18,13 +18,20 @@ cd ../..
 python scripts/proton_opt.py $1 $2 $3 $4
 echo "[$(date +"%Y-%m-%d %T")] Proton optimization files created."
 
+
 cd input/$1
 fileend="_protonopt"
 # Run the _protonopt.inp files in Orca to get _protonopt.out files
 module load orca
+WORK_DIR=$PWD
+TEMP_DIR=$(mktemp -d)
 for file in "${INPUT_NAMES[@]}"; do
+    cp "$file$fileend.inp" "$TEMP_DIR/"
+    cd "$TEMP_DIR"
     $(command -v orca) "$file$fileend.inp" > "$file$fileend.out" || echo "[$(date +"%Y-%m-%d %T")] $file proton optimization failed."
+    cp "$file$fileend.out" "$WORK_DIR/"
     echo "[$(date +"%Y-%m-%d %T")] $file proton optimization done."
+    cd "$WORK_DIR"
 done
 
 cd ../..
@@ -36,9 +43,15 @@ echo "[$(date +"%Y-%m-%d %T")] Orca input files created."
 cd input/$1
 # Run the .inp files in Orca to get .out files
 for file in "${INPUT_NAMES[@]}"; do
+    cp "$file.inp" "$TEMP_DIR/"
+    cd "$TEMP_DIR"
     $(command -v orca) "$file.inp" > "$file.out" || echo "[$(date +"%Y-%m-%d %T")] $file energy calculation failed."
+    cp "$file.out" "$WORK_DIR/"
     echo "[$(date +"%Y-%m-%d %T")] $file Orca run done."
+    cd "$WORK_DIR"
 done
+
+rm -rf "$TEMP_DIR"
 
 cd ../..
 mkdir -p output/$1

@@ -55,7 +55,7 @@ def load_geometry(geometry):
 	atom_list = []
 	for x, line in enumerate(output_lines):
 		a = line.split()
-		atom_list.append([x+1, a[0], float(a[1]), float(a[2]), float(a[3])])
+		atom_list.append([x, a[0], float(a[1]), float(a[2]), float(a[3])])
 		
 	return atom_list
 
@@ -65,11 +65,12 @@ Outputs a list of lists where the first number is dummy atom, second number is b
 def create_key(base_atoms, dummy_atoms, bond_atoms):
 	key = []
 	extra_atoms = []
+
 	for line1 in base_atoms:
 		for line2 in dummy_atoms:
 			if line1[1:] == line2[1:]:
 				key.append([line2[0], line1[0]])
-				
+
 	#Find atoms in dummy, but not in base geometry
 	extra_atoms = []
 	for line in dummy_atoms:

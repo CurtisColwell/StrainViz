@@ -1,7 +1,7 @@
 from scripts import get_atom_coords, get_connectivity_data, load_geometry, create_key
-import os
+import os, re
 import copy
-""" Maps the force values from the output file onto the original geometry .xyz file by digesting 
+""" Maps the energy values from the output file onto the original geometry .xyz file by digesting 
 the output files and writing .tcl scripts to by viewed in VMD
 """
 def map_forces(geometry, force_output):
@@ -10,11 +10,11 @@ def map_forces(geometry, force_output):
 
 	bond_atoms = []
 	for line in bond_forces:
-		bond_atoms.append(bond_forces[1])
+		bond_atoms.append(line[1])
 	
 	#Use the base geometry and unoptimized dummy geometry to create a key
 	key = create_key(load_geometry(geometry), load_geometry(geometry[:-4] + "/" + os.path.splitext(force_output)[0] + ".xyz"), bond_atoms)
-	
+
 	mapped_bond_forces = translate_forces(bond_forces, key)
 	mapped_angle_forces = translate_forces(angle_forces, key)
 	mapped_dihedral_forces = translate_forces(dihedral_forces, key)
@@ -54,31 +54,31 @@ def force_parse(file):
 
 	#Initialize needed variables
 	read_line = False
-	force_data = [[]]
-	force_list = []
+	energy_data = [[]]
+	energy_list = []
 		
-	#Get first force constants
+	#Get all energy data
 	x = 0
 	for line in output_lines:
-		if '      Item               Value     Threshold  Converged?' in line and read_line == True:
+		if '*************************************************************' in line and read_line == True:
 			read_line = False
-			force_data.append([])
+			energy_data[x].pop(0)
+			energy_data[x].pop()
+			energy_data[x].pop()
+			energy_data.append([])
 			x += 1
 			continue
-		if '                              (Linear)    (Quad)   (Total)' in line:
+		if '     Definition                    Value    dE/dq     Step     New-Value' in line:
 			read_line = True
 			continue
 		if read_line == True:
-			force_data[x].append(line.split())
-	
-	force_data.pop()
-	force_data.pop()
+			energy_data[x].append(line.split())
 	
 	#Get energy at each step
 	step_energy = []
 	for line in output_lines:
-		if 'SCF Done:' in line:
-			step_energy.append(float(line.split()[4]))
+		if 'Total Energy       :' in line:
+			step_energy.append(float(line.split()[3]))
 	
 	#Get energy change at each step
 	step_energy_change = []
@@ -92,10 +92,10 @@ def force_parse(file):
 			
 	#Get predicted change in energy for the step
 	pred_step_energy_change = []
-	for set in force_data:
+	for set in energy_data:
 		energy = 0
 		for line in set:
-			energy += float(line[2])*float(line[5])
+			energy += float(line[-3])*float(line[-2])
 		pred_step_energy_change.append(energy)
 	
 	#Create scaling factor for each energy step
@@ -107,33 +107,73 @@ def force_parse(file):
 			scale_factor.append(-energy/pred_step_energy_change[index])
 
 	#Get connectivity data
-	connectivity_data = get_connectivity_data(output_lines)
+	#connectivity_data = get_connectivity_data(output_lines)
 	
-	for index, line in enumerate(connectivity_data):
-		line.append(0)
-		for i, set in enumerate(force_data):
-			line[-1] += float(set[index][2])*float(set[index][5])*scale_factor[i]
+	#for index, line in enumerate(connectivity_data):
+	#	line.append(0)
+	#	for i, set in enumerate(energy_data):
+	#		line[-1] += float(set[index][2])*float(set[index][5])*scale_factor[i]
 	
-	#Reformat into list of [force, coords]
-	for line in connectivity_data:
-		force_list.append([line[-1], line[:-1]])
+	#Reformat into list of [energy, coords]
+	#for line in connectivity_data:
+	#	energy_list.append([line[-1], line[:-1]])
 	
-	#Split into bond, angle, and dihedral forces
-	bond_forces = []
-	angle_forces = []
-	dihedral_forces = []
-	for line in force_list:
-		if len(line[1]) == 2:
-			bond_forces.append(line)
-		if len(line[1]) == 3:
-			angle_forces.append(line)
-		if len(line[1]) == 4:
-			dihedral_forces.append(line)
-		if len(line[1]) == 5:
-			angle_forces.append([line[0],line[1][:2]])
+	#Split into bond, angle, and dihedral energies
+	bond_energies = [[]]
+	angle_energies = [[]]
+	dihedral_energies = [[]]
+	for x, set in enumerate(energy_data):
+		for line in set:
+			if len(line) == 8:
+				bond_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3])]])
+			if len(line) == 9:
+				angle_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3]),re.sub("\D","",line[4])]])
+			if len(line) == 10:
+				dihedral_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3]),re.sub("\D","",line[4]),re.sub("\D","",line[5])]])
+#			if len(line) == 11:
+#				angle_energies.append([line[0],line[1][:2]])
+		bond_energies.append([])
+		angle_energies.append([])
+		dihedral_energies.append([])
 	
-	#Return the bond, angle, and dihedral forces as lists
-	return bond_forces, angle_forces, dihedral_forces
+	bond_energies.pop()
+	bond_energies.pop()
+	angle_energies.pop()
+	angle_energies.pop()
+	dihedral_energies.pop()
+	dihedral_energies.pop()
+	
+	#Sum across all steps
+	bond_energy_total = []
+	angle_energy_total = []
+	dihedral_energy_total = []
+	for line in bond_energies[0]:
+		bond_energy_total.append([0,line[1]])
+	for line in angle_energies[0]:
+		angle_energy_total.append([0,line[1]])
+	for line in dihedral_energies[0]:
+		dihedral_energy_total.append([0,line[1]])
+
+	for set in bond_energies:
+		for line1 in set:
+			for line2 in bond_energy_total:
+				if line1[1] == line2[1]:
+					line2[0] -= line1[0]
+
+	for set in angle_energies:
+		for line1 in set:
+			for line2 in angle_energy_total:
+				if line1[1] == line2[1]:
+					line2[0] -= line1[0]
+	
+	for set in dihedral_energies:
+		for line1 in set:
+			for line2 in dihedral_energy_total:
+				if line1[1] == line2[1]:
+					line2[0] -= line1[0]
+	
+	#Return the bond, angle, and dihedral energies as lists
+	return bond_energy_total, angle_energy_total, dihedral_energy_total
 
 """ Takes the forces and translates the atom numbers to correspond to the base geometry.
 """
