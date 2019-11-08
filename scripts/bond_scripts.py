@@ -56,22 +56,25 @@ def force_parse(file):
 	read_line = False
 	energy_data = [[]]
 	energy_list = []
+	dashed_lines = 2
 		
 	#Get all energy data
 	x = 0
 	for line in output_lines:
-		if '*************************************************************' in line and read_line == True:
+		if '----------------------------------------------------------------------------' in line and dashed_lines == 1:
 			read_line = False
 			energy_data[x].pop(0)
-			energy_data[x].pop()
-			energy_data[x].pop()
 			energy_data.append([])
+			dashed_lines += 1
 			x += 1
 			continue
+		if '----------------------------------------------------------------------------' in line and dashed_lines == 0:
+			dashed_lines += 1
 		if '     Definition                    Value    dE/dq     Step     New-Value' in line:
 			read_line = True
+			dashed_lines = 0
 			continue
-		if read_line == True:
+		if dashed_lines == 1:
 			energy_data[x].append(line.split())
 	
 	#Get energy at each step
@@ -105,18 +108,6 @@ def force_parse(file):
 			scale_factor.append(0)
 		else:
 			scale_factor.append(-energy/pred_step_energy_change[index])
-
-	#Get connectivity data
-	#connectivity_data = get_connectivity_data(output_lines)
-	
-	#for index, line in enumerate(connectivity_data):
-	#	line.append(0)
-	#	for i, set in enumerate(energy_data):
-	#		line[-1] += float(set[index][2])*float(set[index][5])*scale_factor[i]
-	
-	#Reformat into list of [energy, coords]
-	#for line in connectivity_data:
-	#	energy_list.append([line[-1], line[:-1]])
 	
 	#Split into bond, angle, and dihedral energies
 	bond_energies = [[]]
@@ -130,8 +121,8 @@ def force_parse(file):
 				angle_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3]),re.sub("\D","",line[4])]])
 			if len(line) == 10:
 				dihedral_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3]),re.sub("\D","",line[4]),re.sub("\D","",line[5])]])
-#			if len(line) == 11:
-#				angle_energies.append([line[0],line[1][:2]])
+			if len(line) == 11:
+				angle_energies[x].append([float(line[-3])*float(line[-2]),[re.sub("\D","",line[2]),re.sub("\D","",line[3]),re.sub("\D","",line[4])]])
 		bond_energies.append([])
 		angle_energies.append([])
 		dihedral_energies.append([])
