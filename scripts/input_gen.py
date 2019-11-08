@@ -22,9 +22,9 @@ def create_input(file):
 		if read_line == True:
 			coordinates.append(line)
 	
-	for i in range(2):
+	for _ in range(2):
 		coordinates.pop()
-	for i in range(5):
+	for _ in range(5):
 		coordinates.pop(0)
 
 	script = open(file[:-14] + ".inp", "w")
