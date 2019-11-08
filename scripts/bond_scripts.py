@@ -236,7 +236,7 @@ def vmd_writer(script_name, bond_colors, geometry_filename, min, max, header):
 		script.write("mol addrep top\n")
 		script.write("mol modstyle %s top bonds\n" % (index+1))
 		script.write("mol modcolor %s top {colorid %s}\n" % (index+1,line[0]))
-		script.write("mol modselect %s top {index %s %s}\n\n" % (index+1,int(line[1][0])-1,int(line[1][1])-1))
+		script.write("mol modselect %s top {index %s %s}\n\n" % (index+1,int(line[1][0]),int(line[1][1])))
 
 def raw_output_writer(script_name, forces):
 	output = open('output/' + script_name, "w")
