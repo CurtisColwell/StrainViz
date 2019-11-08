@@ -3,4 +3,4 @@
 
 set -e
 
-bash StrainViz.bash ${SLURM_JOB_NAME} ${SLURM_NTASKS} $theory
+bash StrainViz.bash ${SLURM_JOB_NAME} ${SLURM_NTASKS} $functional $basis
