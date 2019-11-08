@@ -91,7 +91,7 @@ def force_parse(file):
 	#Check for increase in step energy
 	for line in step_energy_change:
 		if line > 0:
-			print("Positive enegy change in "+file)
+			print("Positive energy change in "+file)
 			
 	#Get predicted change in energy for the step
 	pred_step_energy_change = []
@@ -100,7 +100,7 @@ def force_parse(file):
 		for line in set:
 			energy += float(line[-3])*float(line[-2])
 		pred_step_energy_change.append(energy)
-	
+
 	#Create scaling factor for each energy step
 	scale_factor = []
 	for index, energy in enumerate(step_energy_change[:len(pred_step_energy_change)]):
@@ -108,7 +108,7 @@ def force_parse(file):
 			scale_factor.append(0)
 		else:
 			scale_factor.append(-energy/pred_step_energy_change[index])
-	
+
 	#Split into bond, angle, and dihedral energies
 	bond_energies = [[]]
 	angle_energies = [[]]
