@@ -6,44 +6,44 @@ import sys
 """ This function uses the output from the proton optimization to create a Gaussian input 
 file for the strain calculation
 """
-def create_input(file, level):
+def create_input(file):
 	output_lines = open(file,'r').read().splitlines()
 	
 	read_line = False
 	
 	for line in output_lines:
-		if ' Rotational constants (GHZ):' in line and read_line == True:
+		if '(A.U.)' in line and read_line == True:
 			read_line = False
-			continue
-		if ' Number     Number       Type             X           Y           Z' in line:
+			break
+		if '*** FINAL ENERGY EVALUATION AT THE STATIONARY POINT ***' in line:
 			coordinates = []
 			read_line = True
 			continue
 		if read_line == True:
-			coordinates.append(line.split())
+			coordinates.append(line)
 	
-	coordinates.pop()
-	coordinates.pop(0)
-	
-	periodic_table_text = open("scripts/periodic_table.txt",'r').read().splitlines()
-	periodic_table = {}
-	for element in periodic_table_text:
-		periodic_table[element.split()[0]] = element.split()[1]
+	for i in range(2):
+		coordinates.pop()
+	for i in range(5):
+		coordinates.pop(0)
 
 	script = open(file[:-14] + ".inp", "w")
-	script.write("%NProcShared=" + sys.argv[2] + "\n#n " + level + " opt=rfo\n\n")
-	script.write(" geometry optimization\n\n0 1\n")
-	for atom in coordinates:
-		script.write("%s\t%s\t%s\t%s\t" % (periodic_table[atom[1]], atom[3], atom[4], atom[5]))
-		script.write("\n")
-	script.write("\n")
-	
+
+	script.write("! " + functional + " OPT " + basis +"\n")
+	script.write("%pal\n\tnprocs " + processors + "\nend\n")
+	script.write("* xyz 0 1\n")
+	for line in coordinates:
+		script.write(line + "\n")
+	script.write("\n*")
+
 	os.remove(file)
 	os.remove(os.path.splitext(file)[0] + ".inp")
 
 # Execution
 
-level = sys.argv[3]
+processors = sys.argv[2]
+functional = sys.argv[3]
+basis = sys.argv[4]
 fragments = []
 fragment_folder = "input/" + sys.argv[1] + "/"
 for file in os.listdir(fragment_folder):
@@ -51,4 +51,4 @@ for file in os.listdir(fragment_folder):
         fragments.append(fragment_folder + file)
 
 for file in fragments:
-    create_input(file, level)
+    create_input(file)
