@@ -112,13 +112,13 @@ def force_parse(file):
 	for x, set in enumerate(energy_data):
 		for line in set:
 			if len(line) == 8:
-				bond_energies[x].append([float(line[-3])*float(line[-2]),[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3])]])
+				bond_energies[x].append([float(line[-3])*float(line[-2])*1.889725989,[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3])]])
 			if len(line) == 9:
-				angle_energies[x].append([float(line[-3])*float(line[-2]),[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4])]])
+				angle_energies[x].append([float(line[-3])*float(line[-2])*0.01745329252,[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4])]])
 			if len(line) == 10:
-				dihedral_energies[x].append([float(line[-3])*float(line[-2]),[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4]),re.sub(r"\D","",line[5])]])
+				dihedral_energies[x].append([float(line[-3])*float(line[-2])*0.01745329252,[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4]),re.sub(r"\D","",line[5])]])
 			if len(line) == 11:
-				angle_energies[x].append([float(line[-3])*float(line[-2]),[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4])]])
+				angle_energies[x].append([float(line[-3])*float(line[-2])*0.01745329252,[re.sub(r"\D","",line[2]),re.sub(r"\D","",line[3]),re.sub(r"\D","",line[4])]])
 		bond_energies.append([])
 		angle_energies.append([])
 		dihedral_energies.append([])
