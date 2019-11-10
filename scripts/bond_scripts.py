@@ -88,22 +88,6 @@ def force_parse(file):
 	for line in step_energy_change:
 		if line > 0:
 			print("Positive energy change in "+file)
-			
-	#Get predicted change in energy for the step
-	pred_step_energy_change = []
-	for set in energy_data:
-		energy = 0
-		for line in set:
-			energy += float(line[-3])*float(line[-2])
-		pred_step_energy_change.append(energy)
-
-	#Create scaling factor for each energy step
-	scale_factor = []
-	for index, energy in enumerate(step_energy_change[:len(pred_step_energy_change)]):
-		if pred_step_energy_change[index] == 0:
-			scale_factor.append(0)
-		else:
-			scale_factor.append(-energy/pred_step_energy_change[index])
 
 	#Split into bond, angle, and dihedral energies
 	bond_energies = [[]]
@@ -130,6 +114,34 @@ def force_parse(file):
 	dihedral_energies.pop()
 	dihedral_energies.pop()
 	
+	#Get predicted change in energy for the step
+	pred_step_energy_change = []
+	for set in bond_energies:
+		energy = 0
+		for line in set:
+			energy += line[0]
+		pred_step_energy_change.append(energy)
+
+	for x, set in enumerate(angle_energies):
+		energy = 0
+		for line in set:
+			energy += line[0]
+		pred_step_energy_change[x] += energy
+
+	for x, set in enumerate(dihedral_energies):
+		energy = 0
+		for line in set:
+			energy += line[0]
+		pred_step_energy_change[x] += energy
+
+	#Create scaling factor for each energy step
+	scale_factor = []
+	for index, energy in enumerate(step_energy_change[:len(pred_step_energy_change)]):
+		if pred_step_energy_change[index] == 0:
+			scale_factor.append(0)
+		else:
+			scale_factor.append(energy/pred_step_energy_change[index])
+
 	#Sum across all steps
 	bond_energy_total = []
 	angle_energy_total = []
@@ -141,23 +153,23 @@ def force_parse(file):
 	for line in dihedral_energies[0]:
 		dihedral_energy_total.append([0,line[1]])
 
-	for set in bond_energies:
+	for x, set in enumerate(bond_energies):
 		for line1 in set:
 			for line2 in bond_energy_total:
 				if line1[1] == line2[1]:
-					line2[0] -= line1[0]
+					line2[0] -= scale_factor[x]*line1[0]
 
 	for set in angle_energies:
 		for line1 in set:
 			for line2 in angle_energy_total:
 				if line1[1] == line2[1]:
-					line2[0] -= line1[0]
+					line2[0] -= scale_factor[x]*line1[0]
 	
 	for set in dihedral_energies:
 		for line1 in set:
 			for line2 in dihedral_energy_total:
 				if line1[1] == line2[1]:
-					line2[0] -= line1[0]
+					line2[0] -= scale_factor[x]*line1[0]
 	
 	#Return the bond, angle, and dihedral energies as lists
 	return bond_energy_total, angle_energy_total, dihedral_energy_total
