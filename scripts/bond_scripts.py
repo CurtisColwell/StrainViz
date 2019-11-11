@@ -159,18 +159,18 @@ def force_parse(file):
 				if line1[1] == line2[1]:
 					line2[0] -= scale_factor[x]*line1[0]
 
-	for set in angle_energies:
+	for x, set in enumerate(angle_energies):
 		for line1 in set:
 			for line2 in angle_energy_total:
 				if line1[1] == line2[1]:
 					line2[0] -= scale_factor[x]*line1[0]
 	
-	for set in dihedral_energies:
+	for x, set in enumerate(dihedral_energies):
 		for line1 in set:
 			for line2 in dihedral_energy_total:
 				if line1[1] == line2[1]:
 					line2[0] -= scale_factor[x]*line1[0]
-	
+
 	#Return the bond, angle, and dihedral energies as lists
 	return bond_energy_total, angle_energy_total, dihedral_energy_total
 

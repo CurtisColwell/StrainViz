@@ -31,6 +31,7 @@ def create_input(file):
 
 	script.write("! " + functional + " OPT " + basis +"\n")
 	script.write("%pal\n\tnprocs " + processors + "\nend\n")
+	script.write("%geom\n\tcoordsys redundant_old\nend\n")
 	script.write("* xyz 0 1\n")
 	for line in coordinates:
 		script.write(line + "\n")
