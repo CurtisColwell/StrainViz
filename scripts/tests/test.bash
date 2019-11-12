@@ -4,12 +4,12 @@ set -e
 # Set up
 cd "$(dirname "$0")"
 cp test.xyz ../../input/
-mkdir ../../input/test/
+mkdir -p ../../input/test/
 cp test_dummy.xyz ../../input/test/
 
 # Test proton_opt.py
 cd ../..
-python scripts/proton_opt.py test 1 "B3LYP/6-31G(d)"
+python scripts/proton_opt.py test 1 B3LYP 6-31G* 28
 if cmp -s input/test/test_dummy_protonopt.inp scripts/tests/answer_dummy_protonopt.inp
 then
     echo "Proton_opt.py test passed."
@@ -20,7 +20,7 @@ fi
 
 # Test input_gen.py
 cp scripts/tests/test_dummy_protonopt.out input/test/
-python scripts/input_gen.py test 1 "B3LYP/6-31G(d)"
+python scripts/input_gen.py test 1 B3LYP 6-31G* 28
 if cmp -s input/test/test_dummy.inp scripts/tests/answer_dummy.inp
 then
     echo "Input_gen.py test passed."
@@ -35,9 +35,16 @@ cp scripts/tests/test_dummy.out input/test/
 python scripts/StrainViz.py test
 if cmp -s output/test/total_force.tcl scripts/tests/answer_total_force.tcl
 then
-    echo "StrainViz.py test passed."
+    echo "StrainViz.py TCL script test passed."
 else
-    echo "StrainViz.py test failed."
+    echo "StrainViz.py TCL script test failed."
+    fail=1
+fi
+if cmp -s output/test/total_force.txt scripts/tests/answer_total_force.txt
+then
+    echo "StrainViz.py raw output test passed."
+else
+    echo "StrainViz.py raw output test failed."
     fail=1
 fi
 
