@@ -5,7 +5,7 @@ set -e
 inputname=$(basename -- "$1")
 inputname="${inputname%.*}"
 
-functional="${2:-"M062X"}"
+functional="${2:-"B3LYP"}"
 basis="${3:-"6-31G**"}"
 partition="${4:-"short"}"
 processors="${5:-"28"}"
