@@ -1,6 +1,6 @@
 # Strain Analysis Visualization
 
-<img src="https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/StrainViz.png" alt="StrainViz Logo" width="250">
+<img src="https://github.com/CurtisColwell/StrainViz/blob/orca/scripts/figures/StrainViz.png" alt="StrainViz Logo" width="250">
 
 ## About
 
@@ -30,7 +30,7 @@ All manual steps are shown in green, all automated steps are shown in
 red, and all intermediate files are shown in blue. The proton optimization 
 files are deleted after being used.
 
-![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/block_diagram.png)
+![StrainViz Block Diagram](https://github.com/CurtisColwell/StrainViz/blob/orca/scripts/figures/block_diagram.png)
 
 1. Model the strained compound in Avogadro and create an Orca
 input file to optimize the geometry.
@@ -70,7 +70,7 @@ In the .tcl file used to visualize the strain, the first two lines specify the m
 and maximum energy present in the molecule. This value is given in kcal/mol. The most 
 red bond has the maximum energy and the most green bond has the minimum energy.
 
-<img src="https://github.com/CurtisColwell/StrainViz/blob/master/scripts/figures/example_colour_scale.png" alt="Colour Scale" width="250">
+<img src="https://github.com/CurtisColwell/StrainViz/blob/orca/scripts/figures/example_colour_scale.png" alt="Colour Scale" width="250">
 
 ## Fragment creation
 

@@ -153,19 +153,19 @@ def force_parse(file):
 	for line in dihedral_energies[0]:
 		dihedral_energy_total.append([0,line[1]])
 
-	for x, set in enumerate(bond_energies):
+	for x, set in enumerate(bond_energies[:len(scale_factor)]):
 		for line1 in set:
 			for line2 in bond_energy_total:
 				if line1[1] == line2[1]:
 					line2[0] -= scale_factor[x]*line1[0]
 
-	for x, set in enumerate(angle_energies):
+	for x, set in enumerate(angle_energies[:len(scale_factor)]):
 		for line1 in set:
 			for line2 in angle_energy_total:
 				if line1[1] == line2[1]:
 					line2[0] -= scale_factor[x]*line1[0]
 	
-	for x, set in enumerate(dihedral_energies):
+	for x, set in enumerate(dihedral_energies[:len(scale_factor)]):
 		for line1 in set:
 			for line2 in dihedral_energy_total:
 				if line1[1] == line2[1]:
