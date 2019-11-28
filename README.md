@@ -74,6 +74,11 @@ red bond has the maximum energy and the most green bond has the minimum energy.
 
 ## Fragment creation
 
+Create fragments that are relatively symmetric and do not create unconventional functional 
+groups. Only two fragments are necessary to cover all bonds in the molecule and a good 
+approximation of the total strain can be obtained, however, the more fragments you have, the 
+more accurate the local strain map will become as long as these fragments are large and 
+created symmetrically.
 If there is a mistake during the run it is usually due to an error with the way the 
 fragments were made and is reflected as an error in one of the Orca output files. 
 Use the terminal output to determine where the calculation went wrong and check the 
@@ -94,7 +99,10 @@ bash Recalc.bash input/example molecule
 If the optimizations are not working ideally, there are a few flags that will appear. 
 
 ### Orca Job Failure
-If a Orca job fails, a note will appear saying which input file generated the failure.
+If an Orca job fails, a note will appear saying which input file generated the failure. This is 
+the most common reason for the script to not work properly. If any job fails, the script will 
+continue, but will likely error out later on due to missing information. Even if the script 
+has enough information to complete the analysis, the results will likely not be correct.
 ### Negative Strain Energy
 If negative strain energies are calculated, a flag will appear saying which output file was 
 analyzed to determine negative strain energies. Negative strain energies can be a hallmark
