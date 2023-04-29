@@ -14,6 +14,7 @@ written in Python and Bash.
 
 This tool was written by [Curtis Colwell](https://github.com/CurtisColwell) 
 in the [Jasti Group](https://pages.uoregon.edu/jastilab/) at the University of Oregon.
+It is published in [Chemical Science](https://pubs.rsc.org/en/content/articlelanding/2020/sc/d0sc00629g).
 
 ## Installation
 
